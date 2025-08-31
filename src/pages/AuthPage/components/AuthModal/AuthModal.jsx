@@ -57,12 +57,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 navigate('/profile');
             }
         } catch (err) {
-            addToast(
-                `Ошибка при обновлении данных ${
-                    err.response?.data?.message || 'Ошибка'
-                }`,
-                'error'
-            );
+            addToast(`${err.response?.data?.message || 'Ошибка'}`, 'error');
         }
     };
 

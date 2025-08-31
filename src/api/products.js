@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/products';
+// const API_URL = 'http://localhost:5000/api/products';
+const API_URL =
+    'online-shop-server-production-a585.up.railway.app/api/products';
 
 export const getProducts = async () => {
     try {

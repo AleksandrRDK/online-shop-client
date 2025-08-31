@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/users';
+// const API_URL = 'http://localhost:5000/api/users';
+const API_URL = 'online-shop-server-production-a585.up.railway.app/api/users';
 
 const API = axios.create({
     baseURL: API_URL,
