@@ -1,0 +1,187 @@
+.product-page {
+    padding: 1rem 0;
+
+    .back-btn {
+        margin-bottom: 1rem;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-secondary);
+        color: var(--color-text);
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background: var(--color-border);
+        }
+    }
+
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        align-items: flex-start;
+
+        img {
+            max-width: 320px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            background: var(--color-bg-secondary);
+        }
+
+        .product-page__info {
+            flex: 1;
+
+            h1 {
+                margin-bottom: 0.5rem;
+            }
+
+            .price {
+                font-size: 1.4rem;
+                font-weight: bold;
+                color: var(--color-accent-primary);
+                margin: 0.5rem 0 1rem;
+            }
+
+            .tags {
+                font-size: 0.9rem;
+                color: var(--color-text-muted);
+                margin-bottom: 1rem;
+            }
+
+            .desc {
+                line-height: 1.5;
+            }
+
+            /* инпуты при редактировании */
+            input,
+            textarea {
+                width: 100%;
+                padding: 0.6rem 0.8rem;
+                margin-bottom: 0.6rem;
+                border: 1px solid var(--color-border);
+                border-radius: var(--radius);
+                background: var(--color-bg-secondary);
+                color: var(--color-text);
+                font-size: 1rem;
+                resize: vertical;
+                transition: border 0.3s, box-shadow 0.3s;
+
+                &:focus {
+                    outline: none;
+                    border-color: var(--color-accent-primary);
+                    box-shadow: 0 0 4px var(--color-accent-primary);
+                }
+            }
+        }
+    }
+
+    /* Общий стиль карточек */
+    &__characteristics,
+    &__owner,
+    &__date {
+        background: var(--color-bg-secondary);
+        padding: 1rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.5rem;
+
+        h2 {
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+    }
+
+    &__characteristics {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+
+            tr {
+                border-bottom: 1px solid var(--color-border);
+
+                &:last-child {
+                    border-bottom: none;
+                }
+            }
+
+            td {
+                padding: 0.4rem 0.6rem;
+            }
+
+            td:first-child {
+                font-weight: bold;
+                width: 40%;
+            }
+
+            input {
+                width: 100%;
+                background: var(--color-bg-secondary);
+                color: var(--color-text);
+                border: 1px solid var(--color-border);
+                border-radius: var(--radius);
+                padding: 0.4rem 0.6rem;
+                font-size: 0.95rem;
+
+                &:focus {
+                    border-color: var(--color-accent-primary);
+                    box-shadow: 0 0 4px var(--color-accent-primary);
+                }
+            }
+        }
+    }
+
+    /* Блок кнопок управления (редактировать/удалить) */
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-1px);
+            }
+        }
+
+        .edit-btn {
+            background: var(--color-accent-primary);
+            color: var(--color-bg-secondary);
+            &:hover {
+                filter: brightness(0.85);
+            }
+        }
+
+        .save-btn {
+            background: var(--color-accent-success);
+            color: var(--color-bg-secondary);
+            &:hover {
+                filter: brightness(0.85);
+            }
+        }
+
+        .cancel-btn {
+            background: var(--color-bg-secondary);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            &:hover {
+                background: var(--color-border);
+            }
+        }
+
+        .delete-btn {
+            background: var(--color-accent-danger);
+            color: var(--color-bg-secondary);
+            &:hover {
+                filter: brightness(0.85);
+            }
+        }
+    }
+}

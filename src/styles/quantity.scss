@@ -1,0 +1,49 @@
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    .quantity-btn {
+        width: 32px;
+        height: 32px;
+        background: var(--color-bg-secondary);
+        border: 2px solid var(--color-accent-secondary);
+        border-radius: var(--radius);
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        color: var(--color-accent-secondary);
+        transition: 0.2s;
+
+        &:hover {
+            background: var(--color-accent-secondary);
+            color: var(--color-bg-secondary);
+        }
+
+        &:disabled {
+            cursor: default;
+            opacity: 0.5;
+        }
+    }
+
+    .quantity-number {
+        min-width: 20px;
+        text-align: center;
+        font-weight: 500;
+    }
+}
+.quantity-btn__global {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--color-accent-secondary);
+    border-radius: var(--radius);
+    background: var(--color-bg-secondary);
+    color: var(--color-accent-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--color-accent-secondary);
+        color: var(--color-bg-secondary);
+        transform: translateY(-1px);
+    }
+}

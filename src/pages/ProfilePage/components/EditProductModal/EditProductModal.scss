@@ -1,0 +1,87 @@
+.edit-product-modal {
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    color: var(--color-text);
+
+    h2 {
+        font-size: 1.6rem;
+        color: var(--color-heading);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        input,
+        textarea {
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-size: 0.95rem;
+            width: 100%;
+
+            &:focus {
+                outline: none;
+                border-color: var(--color-accent-primary);
+                box-shadow: 0 0 0 2px rgba(58, 174, 216, 0.2);
+            }
+        }
+
+        textarea {
+            resize: none;
+            min-height: 60px;
+        }
+
+        .characteristics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            h3 {
+                font-size: 1.1rem;
+                color: var(--color-heading);
+                margin-bottom: 0.5rem;
+            }
+
+            .characteristic-row {
+                display: flex;
+                gap: 0.5rem;
+
+                input {
+                    flex: 1;
+                }
+            }
+        }
+
+        .modal__actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+
+            button {
+                padding: 0.5rem 1rem;
+                border-radius: var(--radius);
+                border: none;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: filter 0.2s ease;
+
+                &.success {
+                    background-color: var(--color-accent-primary);
+                    color: #fff;
+
+                    &:hover {
+                        filter: brightness(0.9);
+                    }
+                }
+            }
+        }
+    }
+}
