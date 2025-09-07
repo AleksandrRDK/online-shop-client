@@ -3,34 +3,43 @@ import { Link } from 'react-router-dom';
 import { getProductsByUser, deleteProduct } from '@/api/products';
 import GlobalModal from '@/components/GlobalModal/GlobalModal';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import Pagination from '@/components/Pagination/Pagination';
 import EditProductModal from '../EditProductModal/EditProductModal';
 import { useToast } from '@/hooks/useToast';
 
 import { motion as Motion } from 'framer-motion';
 import './UserProducts.scss';
-import '@/styles/card.scss';
 import defaultProduct from '@/assets/default-product.png';
 
 function UserProducts({ user, products, setProducts }) {
     const [editingProduct, setEditingProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const { addToast } = useToast();
+
+    useEffect(() => {
+        if (!user?._id) return;
+        setPage(1);
+    }, [user?._id]);
 
     useEffect(() => {
         if (!user?._id) return;
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const data = await getProductsByUser(user._id);
-                setProducts(data);
+                const data = await getProductsByUser(user._id, page, 12);
+                setProducts(data.products);
+                setTotalPages(data.totalPages);
             } catch (err) {
                 console.error(err);
+                addToast('Ошибка при загрузке товаров пользователя', 'error');
             } finally {
                 setLoading(false);
             }
         };
         fetchProducts();
-    }, [user?._id, setProducts]);
+    }, [user?._id, page, setProducts]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Удалить этот товар?')) return;
@@ -56,9 +65,7 @@ function UserProducts({ user, products, setProducts }) {
         <div className="user-products">
             <h2>ВАШИ ТОВАРЫ</h2>
             {loading ? (
-                <div className="loader-wrapper">
-                    <LoadingSpinner size={160} color="#3aaed8" />
-                </div>
+                <LoadingSpinner size={160} color="#3aaed8" />
             ) : (
                 <div className="user-products__list">
                     {products.map((product, i) => (
@@ -101,6 +108,8 @@ function UserProducts({ user, products, setProducts }) {
                     ))}
                 </div>
             )}
+
+            <Pagination page={page} setPage={setPage} totalPages={totalPages} />
 
             {editingProduct && (
                 <GlobalModal

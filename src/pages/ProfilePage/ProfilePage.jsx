@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 import Header from '@/components/Header/Header';
+import AuthModal from '@/components/AuthModal/AuthModal';
 import Profile from './components/Profile';
 import ProfileModal from './components/ProfileModal';
 import ProductModal from './components/ProductModal';
@@ -17,8 +18,8 @@ function ProfilePage() {
     const [isOpen, setIsOpen] = useState(false);
     const [isProductOpen, setIsProductOpen] = useState(false);
     const [formData, setFormData] = useState({
-        username: user.username,
-        email: user.email,
+        username: user?.username || '',
+        email: user?.email || '',
         password: '',
     });
     const [productData, setProductData] = useState({
@@ -29,6 +30,19 @@ function ProfilePage() {
         tags: '',
         characteristics: [],
     });
+
+    const authOpen = !user;
+
+    if (!user) {
+        return (
+            <>
+                <Header />
+                <div className="container">
+                    <AuthModal isOpen={authOpen} />
+                </div>
+            </>
+        );
+    }
 
     return (
         <>

@@ -1,42 +1,38 @@
-// const API_URL = 'http://localhost:5000/api/carts';
-const API_URL = 'online-shop-server-production-a585.up.railway.app/api/carts';
+import axios from 'axios';
+import { API_URL } from '@/config/config';
+
+const CARTS_URL = `${API_URL}/carts`;
 
 export const addToCart = async (userId, productId, quantity = 1) => {
     try {
-        const res = await fetch(`${API_URL}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, productId, quantity }),
+        const res = await axios.post(CARTS_URL, {
+            userId,
+            productId,
+            quantity,
         });
-
-        if (!res.ok) throw new Error('Ошибка при добавлении в корзину');
-        return await res.json();
+        return res.data;
     } catch (err) {
-        console.error(err);
+        console.error('Ошибка при добавлении в корзину:', err);
         throw err;
     }
 };
 
 export const getCart = async (userId) => {
     try {
-        const res = await fetch(`${API_URL}/${userId}`);
-        if (!res.ok) throw new Error('Ошибка при загрузке корзины');
-        return await res.json();
+        const res = await axios.get(`${CARTS_URL}/${userId}`);
+        return res.data;
     } catch (err) {
-        console.error(err);
+        console.error('Ошибка при загрузке корзины:', err);
         throw err;
     }
 };
 
 export const removeFromCart = async (userId, productId) => {
     try {
-        const res = await fetch(`${API_URL}/${userId}/${productId}`, {
-            method: 'DELETE',
-        });
-        if (!res.ok) throw new Error('Ошибка при удалении товара');
-        return await res.json();
+        const res = await axios.delete(`${CARTS_URL}/${userId}/${productId}`);
+        return res.data;
     } catch (err) {
-        console.error(err);
+        console.error('Ошибка при удалении товара:', err);
         throw err;
     }
 };

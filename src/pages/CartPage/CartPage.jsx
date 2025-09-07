@@ -4,13 +4,18 @@ import { useAuth } from '@/hooks/useAuth';
 
 import Header from '@/components/Header/Header';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import AuthModal from '@/components/AuthModal/AuthModal';
 import defaultProduct from '@/assets/default-product.png';
 import './CartPage.scss';
 
 function CartPage() {
     const { user, loading } = useAuth();
+    const [authOpen, setAuthOpen] = useState(false);
     const [cart, setCart] = useState([]);
-    const [cartLoading, setCartLoading] = useState(true);
+    const [cartLoading, setCartLoading] = useState(false);
+
+    const openAuth = () => setAuthOpen(true);
+    const closeAuth = () => setAuthOpen(false);
 
     useEffect(() => {
         if (user?._id) {
@@ -43,8 +48,26 @@ function CartPage() {
         return (
             <>
                 <Header />
-                <div className="loader-wrapper">
-                    <LoadingSpinner size={160} color="#3aaed8" />
+                <LoadingSpinner size={160} color="#3aaed8" />
+            </>
+        );
+    }
+
+    if (!user) {
+        return (
+            <>
+                <Header />
+                <div className="container">
+                    <div className="cart-page">
+                        <h2 className="cart-title">Корзина</h2>
+                        <p className="cart-empty">
+                            Войдите, чтобы использовать корзину
+                        </p>
+                        <button className="cart-checkout" onClick={openAuth}>
+                            Войти
+                        </button>
+                        <AuthModal isOpen={authOpen} onClose={closeAuth} />
+                    </div>
                 </div>
             </>
         );

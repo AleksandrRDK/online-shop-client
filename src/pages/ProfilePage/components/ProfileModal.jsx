@@ -32,7 +32,8 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
         if (passwordError) return addToast(passwordError, 'error');
 
         try {
-            await updateProfile(formData);
+            const updatedUser = await updateProfile(formData);
+            setUser(updatedUser);
             addToast('Данные обновлены!', 'success');
             setIsOpen(false);
         } catch (err) {

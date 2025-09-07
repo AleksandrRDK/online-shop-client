@@ -11,7 +11,7 @@ function Header() {
                         <ul className="header__list">
                             <li className="header__item">
                                 <NavLink
-                                    to="/catalog"
+                                    to="/"
                                     className={({ isActive }) =>
                                         `header__link ${
                                             isActive

@@ -19,22 +19,56 @@ function ProductModal({
 
     const handleProductSubmit = async (e) => {
         e.preventDefault();
+
+        // Валидация
+        if (!productData.title.trim()) {
+            addToast('Название товара обязательно!', 'error');
+            return;
+        }
+
+        if (
+            !productData.price ||
+            isNaN(productData.price) ||
+            Number(productData.price) <= 0
+        ) {
+            addToast('Цена должна быть числом больше 0!', 'error');
+            return;
+        }
+
+        if (
+            productData.image &&
+            !/^https?:\/\/.+\..+/.test(productData.image)
+        ) {
+            addToast('Некорректный URL изображения!', 'error');
+            return;
+        }
+
+        const invalidChar = productData.characteristics.find(
+            (char) => char.name.trim() === '' || char.value.trim() === ''
+        );
+        if (invalidChar) {
+            addToast(
+                'Все характеристики должны иметь название и значение!',
+                'error'
+            );
+            return;
+        }
+
         try {
-            const characteristicsObject = productData.characteristics
-                .filter(
-                    (char) =>
-                        char.name.trim() !== '' && char.value.trim() !== ''
-                )
-                .reduce((acc, char) => {
+            const characteristicsObject = productData.characteristics.reduce(
+                (acc, char) => {
                     acc[char.name.trim()] = char.value.trim();
                     return acc;
-                }, {});
+                },
+                {}
+            );
 
             const newProduct = await createProduct({
                 ...productData,
                 characteristics: characteristicsObject,
                 ownerId: user._id,
             });
+
             setProducts((prev) => [newProduct, ...prev]);
             addToast('Товар добавлен!', 'success');
             setIsProductOpen(false);

@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
+                setLoading(true);
                 const res = await getProfile();
                 setUser(res.data);
             } catch {
