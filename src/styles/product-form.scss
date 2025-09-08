@@ -22,6 +22,37 @@
         min-height: 80px;
     }
 
+    .product-form__image {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+
+        input[type='file'] {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 0.5rem;
+            cursor: pointer;
+            background-color: var(--color-bg-secondary);
+            color: var(--color-text);
+            transition: border 0.2s, background-color 0.2s;
+
+            &:hover {
+                border-color: var(--color-accent-primary);
+            }
+        }
+
+        .product-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            object-fit: cover;
+            border: 1px solid var(--color-border);
+            align-self: flex-start;
+        }
+    }
+
     .btn-secondary {
         padding: 0.6rem 1rem;
         border-radius: var(--radius);

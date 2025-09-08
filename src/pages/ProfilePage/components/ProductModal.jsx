@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { createProduct } from '@/api/products.js';
+import { validateAvatar } from '@/utils/validators';
+import Pica from 'pica';
 
 function ProductModal({
     productData,
@@ -9,12 +12,51 @@ function ProductModal({
     setProducts,
 }) {
     const { addToast } = useToast();
+    const [file, setFile] = useState(null);
+    const [preview, setPreview] = useState(null);
 
     const handleProductChange = (e) => {
         setProductData({
             ...productData,
             [e.target.name]: e.target.value,
         });
+    };
+
+    const handleFileChange = async (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        const error = validateAvatar(selectedFile);
+        if (error) {
+            addToast(error, 'error');
+            return;
+        }
+
+        try {
+            const pica = Pica();
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(selectedFile);
+            await img.decode();
+
+            const canvas = document.createElement('canvas');
+            const maxDim = 512; // например, ограничим размер
+            const ratio = Math.min(maxDim / img.width, maxDim / img.height, 1);
+            canvas.width = img.width * ratio;
+            canvas.height = img.height * ratio;
+
+            await pica.resize(img, canvas);
+
+            const blob = await pica.toBlob(canvas, selectedFile.type);
+            const compressedFile = new File([blob], selectedFile.name, {
+                type: selectedFile.type,
+            });
+
+            setFile(compressedFile);
+            setPreview(URL.createObjectURL(compressedFile));
+        } catch (err) {
+            console.error('Ошибка при сжатии изображения:', err);
+            addToast('Не удалось обработать картинку', 'error');
+        }
     };
 
     const handleProductSubmit = async (e) => {
@@ -32,14 +74,6 @@ function ProductModal({
             Number(productData.price) <= 0
         ) {
             addToast('Цена должна быть числом больше 0!', 'error');
-            return;
-        }
-
-        if (
-            productData.image &&
-            !/^https?:\/\/.+\..+/.test(productData.image)
-        ) {
-            addToast('Некорректный URL изображения!', 'error');
             return;
         }
 
@@ -63,23 +97,29 @@ function ProductModal({
                 {}
             );
 
-            const newProduct = await createProduct({
-                ...productData,
-                characteristics: characteristicsObject,
-                ownerId: user._id,
-            });
+            const newProduct = await createProduct(
+                {
+                    ...productData,
+                    characteristics: characteristicsObject,
+                    ownerId: user._id,
+                },
+                file // сжатая картинка
+            );
 
             setProducts((prev) => [newProduct, ...prev]);
             addToast('Товар добавлен!', 'success');
             setIsProductOpen(false);
+
+            // сброс состояния
             setProductData({
                 title: '',
                 description: '',
                 price: '',
-                image: '',
                 tags: '',
                 characteristics: [],
             });
+            setFile(null);
+            setPreview(null);
         } catch (err) {
             addToast(`Ошибка при добавлении товара!`, 'error');
             console.error(err);
@@ -111,13 +151,23 @@ function ProductModal({
                     onChange={handleProductChange}
                     placeholder="Цена"
                 />
-                <input
-                    type="text"
-                    name="image"
-                    value={productData.image}
-                    onChange={handleProductChange}
-                    placeholder="URL картинки"
-                />
+
+                {/* Картинка */}
+                <div className="product-form__image">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                    />
+                    {preview && (
+                        <img
+                            src={preview}
+                            alt="Превью"
+                            className="product-preview"
+                        />
+                    )}
+                </div>
+
                 <input
                     type="text"
                     name="tags"
@@ -125,6 +175,8 @@ function ProductModal({
                     onChange={handleProductChange}
                     placeholder="Теги через запятую"
                 />
+
+                {/* Характеристики */}
                 <div className="characteristics">
                     <h3>Характеристики</h3>
                     {productData.characteristics.map((char, index) => (
@@ -179,6 +231,7 @@ function ProductModal({
                         + Добавить характеристику
                     </button>
                 </div>
+
                 <div className="modal__actions">
                     <button type="submit" className="success">
                         Добавить
@@ -191,10 +244,11 @@ function ProductModal({
                                 title: '',
                                 description: '',
                                 price: '',
-                                image: '',
                                 tags: '',
                                 characteristics: [],
                             });
+                            setFile(null);
+                            setPreview(null);
                         }}
                     >
                         Отмена

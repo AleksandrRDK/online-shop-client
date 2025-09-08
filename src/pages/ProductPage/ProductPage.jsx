@@ -28,6 +28,7 @@ const ProductPage = () => {
     const [cartItems, setCartItems] = useState({});
 
     const [isEditing, setIsEditing] = useState(false);
+    const [preview, setPreview] = useState(null);
     const [editData, setEditData] = useState({
         title: '',
         price: '',
@@ -104,6 +105,7 @@ const ProductPage = () => {
                     <ProductHeader
                         product={product}
                         editing={{ isEditing, editData, setEditData }}
+                        previewImg={{ preview, setPreview }}
                         cart={{ quantity, cartItems, setCartItems }}
                         user={user}
                     />
@@ -124,8 +126,11 @@ const ProductPage = () => {
                             isEditing={isEditing}
                             setIsEditing={setIsEditing}
                             editData={editData}
+                            setEditData={setEditData}
+                            setPreview={setPreview}
                             product={product}
                             setProduct={setProduct}
+                            setLoading={setLoading}
                         />
                     )}
                 </div>

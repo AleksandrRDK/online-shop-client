@@ -39,9 +39,24 @@ export const getProductById = async (id) => {
     }
 };
 
-export const createProduct = async (product) => {
+export const createProduct = async (product, file) => {
     try {
-        const { data } = await axios.post(PRODUCTS_URL, product);
+        const formData = new FormData();
+        formData.append('title', product.title);
+        formData.append('description', product.description);
+        formData.append('price', product.price);
+        formData.append('ownerId', product.ownerId);
+        if (product.tags) formData.append('tags', JSON.stringify(product.tags));
+        if (product.characteristics)
+            formData.append(
+                'characteristics',
+                JSON.stringify(product.characteristics)
+            );
+        if (file) formData.append('image', file);
+
+        const { data } = await axios.post(PRODUCTS_URL, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
         return data;
     } catch (err) {
         console.error('Ошибка при создании товара:', err);
@@ -49,9 +64,25 @@ export const createProduct = async (product) => {
     }
 };
 
-export const updateProduct = async (id, product) => {
+export const updateProduct = async (id, product, file) => {
     try {
-        const { data } = await axios.put(`${PRODUCTS_URL}/${id}`, product);
+        const formData = new FormData();
+        if (product.title) formData.append('title', product.title);
+        if (product.description)
+            formData.append('description', product.description);
+        if (product.price !== undefined)
+            formData.append('price', product.price);
+        if (product.tags) formData.append('tags', JSON.stringify(product.tags));
+        if (product.characteristics)
+            formData.append(
+                'characteristics',
+                JSON.stringify(product.characteristics)
+            );
+        if (file) formData.append('image', file);
+
+        const { data } = await axios.put(`${PRODUCTS_URL}/${id}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
         return data;
     } catch (err) {
         console.error(`Ошибка при обновлении товара ${id}:`, err);

@@ -2,6 +2,7 @@ import { addToCart, removeFromCart } from '@/api/carts.js';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import ProductCardLayout from '@/components/ProductCardLayout/ProductCardLayout';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 function ProductCard({
     product,
