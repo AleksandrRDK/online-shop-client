@@ -7,13 +7,16 @@ import './CatalogPage.scss';
 import '@/styles/quantity.scss';
 import Header from '@/components/Header/Header';
 import FilterBar from './components/FilterBar';
+import TagFilterModal from './components/TagFilterModal';
 import ProductCard from './components/ProductCard';
 import Pagination from '@/components/Pagination/Pagination';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 const CatalogPage = () => {
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingProducts, setLoadingProducts] = useState(true); // отдельный loading
+    const [tagModalOpen, setTagModalOpen] = useState(false);
+    const [selectedTags, setSelectedTags] = useState([]);
     const { user } = useAuth();
     const [cartItems, setCartItems] = useState({});
     const [updating, setUpdating] = useState({});
@@ -25,24 +28,23 @@ const CatalogPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                setLoading(true);
-                const data = await getProducts(page, 48, filter);
+                setLoadingProducts(true);
+                const data = await getProducts(page, 48, filter, selectedTags);
                 setProducts(data.products);
                 setTotalPages(data.totalPages);
             } catch (err) {
                 console.error(err);
                 addToast('Ошибка при загрузке товаров', 'error');
             } finally {
-                setLoading(false);
+                setLoadingProducts(false);
             }
         };
         fetchProducts();
-    }, [page, filter]);
+    }, [page, filter, selectedTags]);
 
     useEffect(() => {
         const fetchCartData = async () => {
             if (!user?._id) return;
-
             try {
                 const cart = await getCart(user._id);
                 const initialCart = {};
@@ -64,18 +66,39 @@ const CatalogPage = () => {
             <div className="container">
                 <div className="catalog">
                     <h1 className="catalog__title">Каталог товаров</h1>
-                    {loading ? (
-                        <LoadingSpinner size={160} color="#3aaed8" />
+
+                    <div className="catalog__controls">
+                        <FilterBar
+                            filter={filter}
+                            setFilter={setFilter}
+                            setPage={setPage}
+                        />
+                        <button
+                            className="btn-tag-filter"
+                            onClick={() => setTagModalOpen(true)}
+                        >
+                            Фильтры по тегам
+                        </button>
+                    </div>
+
+                    <TagFilterModal
+                        isOpen={tagModalOpen}
+                        onClose={() => setTagModalOpen(false)}
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                    />
+
+                    {loadingProducts ? (
+                        <LoadingSpinner
+                            size={160}
+                            color="var(--color-accent-primary)"
+                        />
                     ) : (
                         <>
-                            <FilterBar
-                                filter={filter}
-                                setFilter={setFilter}
-                                setPage={setPage}
-                            />
                             <div className="catalog__grid">
                                 {products.map((product, index) => (
                                     <ProductCard
+                                        key={product._id}
                                         product={product}
                                         index={index}
                                         updating={updating}

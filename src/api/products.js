@@ -2,11 +2,16 @@ import axios from 'axios';
 import { API_URL } from '@/config/config';
 const PRODUCTS_URL = `${API_URL}/products`;
 
-export const getProducts = async (page = 1, limit = 48, filter = 'all') => {
+export const getProducts = async (
+    page = 1,
+    limit = 48,
+    filter = 'all',
+    tags = []
+) => {
     try {
-        const { data } = await axios.get(PRODUCTS_URL, {
-            params: { page, limit, filter },
-        });
+        const params = { page, limit, filter };
+        if (tags.length) params.tags = tags.join(',');
+        const { data } = await axios.get(PRODUCTS_URL, { params });
         return data;
     } catch (err) {
         console.error('Ошибка при получении товаров:', err);
@@ -96,6 +101,16 @@ export const deleteProduct = async (id) => {
         return data;
     } catch (err) {
         console.error(`Ошибка при удалении товара ${id}:`, err);
+        throw err;
+    }
+};
+
+export const getAllTags = async () => {
+    try {
+        const { data } = await axios.get(`${PRODUCTS_URL}/tags`);
+        return data;
+    } catch (err) {
+        console.error('Ошибка при получении тегов:', err);
         throw err;
     }
 };
