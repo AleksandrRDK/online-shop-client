@@ -1,13 +1,27 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Pica from 'pica';
 import {
     validateUsername,
     validateEmail,
     validatePassword,
+    validateAvatar,
 } from '@/utils/validators';
 import { useToast } from '@/hooks/useToast';
-import { updateProfile, deleteProfile, logout } from '@/api/users.js';
-import { useNavigate } from 'react-router-dom';
+import {
+    updateProfile,
+    deleteProfile,
+    logout,
+    uploadAvatar,
+    deleteAvatar,
+} from '@/api/users.js';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
+    const [avatarPreview, setAvatarPreview] = useState(user.avatar || '');
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [avatarLoading, setAvatarLoading] = useState(false);
+
     const { addToast } = useToast();
     const navigate = useNavigate();
 
@@ -20,7 +34,6 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Валидация
         const usernameError = validateUsername(formData.username);
         const emailError = validateEmail(formData.email);
         const passwordError = formData.password
@@ -57,10 +70,71 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
         if (!window.confirm('Ты точно хочешь удалить аккаунт? 😢')) return;
         try {
             await deleteProfile();
-            alert('Аккаунт удалён');
+            addToast('Аккаунт был удалён', 'success');
             navigate('/');
         } catch (err) {
             console.error('Ошибка при удалении:', err);
+        }
+    };
+
+    const handleAvatarChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const error = validateAvatar(file);
+        if (error) return addToast(error, 'error');
+
+        const pica = Pica();
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        await img.decode();
+
+        const canvas = document.createElement('canvas');
+        const maxDim = 512;
+        const ratio = Math.min(maxDim / img.width, maxDim / img.height, 1);
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+
+        await pica.resize(img, canvas);
+
+        // Создаём Blob и превращаем в File для FormData
+        const blob = await pica.toBlob(canvas, file.type);
+        const compressedFile = new File([blob], file.name, { type: file.type });
+
+        setAvatarPreview(URL.createObjectURL(compressedFile));
+        setAvatarFile(compressedFile);
+    };
+
+    const handleSaveAvatar = async () => {
+        if (!avatarFile) return addToast('Выберите аватар', 'error');
+
+        setAvatarLoading(true);
+        try {
+            const updatedUser = await uploadAvatar(avatarFile);
+            setUser(updatedUser);
+            addToast('Аватар обновлён!', 'success');
+            setAvatarFile(null);
+        } catch (err) {
+            console.error(err);
+            addToast('Ошибка при обновлении аватара', 'error');
+        } finally {
+            setAvatarLoading(false);
+        }
+    };
+
+    const handleDeleteAvatar = async () => {
+        setAvatarLoading(true);
+        try {
+            await deleteAvatar();
+            setUser((prev) => ({ ...prev, avatar: null }));
+            setAvatarPreview('');
+            setAvatarFile(null);
+            addToast('Аватар удалён', 'success');
+        } catch (err) {
+            console.error(err);
+            addToast('Ошибка при удалении аватара', 'error');
+        } finally {
+            setAvatarLoading(false);
         }
     };
 
@@ -68,6 +142,45 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
         <div className="modal__content">
             <h2>Редактировать профиль</h2>
             <form onSubmit={handleSubmit} className="product-form">
+                <div className="profile-avatar">
+                    <img
+                        src={avatarPreview || '/images/default-avatar.png'}
+                        alt="Аватар"
+                        className="avatar-preview"
+                    />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                    />
+                    <button
+                        type="button"
+                        className="btn-black"
+                        onClick={handleSaveAvatar}
+                        disabled={avatarLoading || !avatarFile}
+                    >
+                        {avatarLoading ? (
+                            <LoadingSpinner size={18} color="#fff" />
+                        ) : (
+                            'Сохранить аватар'
+                        )}
+                    </button>
+                    {avatarPreview && (
+                        <button
+                            type="button"
+                            className="danger"
+                            onClick={handleDeleteAvatar}
+                            disabled={avatarLoading}
+                        >
+                            {avatarLoading ? (
+                                <LoadingSpinner size={18} color="#fff" />
+                            ) : (
+                                'Удалить аватар'
+                            )}
+                        </button>
+                    )}
+                </div>
+
                 <input
                     type="text"
                     name="username"

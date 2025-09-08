@@ -22,3 +22,22 @@ export const validatePassword = (password) => {
     if (/\s/.test(password)) return 'Пароль не должен содержать пробелы';
     return null;
 };
+
+// Проверка картинки
+export const validateAvatar = (file) => {
+    if (!file) return 'Файл не выбран';
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSizeMB = 5; // Максимальный размер в мегабайтах
+
+    if (!validTypes.includes(file.type)) {
+        return 'Неверный формат. Допустимы: JPG, PNG, WEBP';
+    }
+
+    const fileSizeMB = file.size / 1024 / 1024;
+    if (fileSizeMB > maxSizeMB) {
+        return `Файл слишком большой. Максимум ${maxSizeMB} МБ`;
+    }
+
+    return null;
+};

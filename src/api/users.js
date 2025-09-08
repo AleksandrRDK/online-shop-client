@@ -44,3 +44,33 @@ export const deleteProfile = async () => {
         throw error;
     }
 };
+
+// Загрузка/обновление аватара
+export const uploadAvatar = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append('avatar', file); // 'avatar' соответствует ключу в multer.single('avatar')
+
+        const res = await API.put('/profile/avatar', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return res.data;
+    } catch (error) {
+        console.error('Ошибка при загрузке аватара:', error);
+        throw error;
+    }
+};
+
+// Удаление аватара
+export const deleteAvatar = async () => {
+    try {
+        const res = await API.delete('/profile/avatar');
+        return res.data;
+    } catch (error) {
+        console.error('Ошибка при удалении аватара:', error);
+        throw error;
+    }
+};
