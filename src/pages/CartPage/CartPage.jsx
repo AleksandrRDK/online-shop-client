@@ -134,7 +134,10 @@ function CartPage() {
                                         className="cart-item"
                                     >
                                         <img
-                                            src={item.productId.image}
+                                            src={
+                                                item.productId.image ||
+                                                defaultProduct
+                                            }
                                             alt={item.productId.title}
                                             className="cart-item__img"
                                             onError={(e) => {

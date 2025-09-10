@@ -157,7 +157,6 @@
             }
 
             p {
-                margin-top: 0.5rem;
                 font-size: 0.95rem;
                 font-weight: 500;
                 color: inherit;
@@ -210,6 +209,7 @@
                 border-radius: var(--radius);
                 box-shadow: var(--shadow);
                 margin: 0 auto;
+                width: 100%;
 
                 .avatar-preview {
                     width: 120px;
@@ -221,6 +221,7 @@
                 }
 
                 input[type='file'] {
+                    width: 100%;
                     display: block;
                     margin-top: 0.5rem;
                     font-size: 0.9rem;

@@ -14,7 +14,7 @@ function ProductCardLayout({ product, index, children }) {
         >
             <img
                 className="catalog__image"
-                src={product.image}
+                src={product.image || defaultProduct}
                 alt={product.title}
                 onError={(e) => {
                     e.target.src = defaultProduct;

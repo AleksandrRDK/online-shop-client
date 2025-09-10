@@ -16,6 +16,7 @@ import {
     deleteAvatar,
 } from '@/api/users.js';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import defaultAvatar from '@/assets/default-avatar.png';
 
 function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
     const [avatarPreview, setAvatarPreview] = useState(user.avatar || '');
@@ -144,9 +145,12 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
             <form onSubmit={handleSubmit} className="product-form">
                 <div className="profile-avatar">
                     <img
-                        src={avatarPreview || '/images/default-avatar.png'}
+                        src={avatarPreview || defaultAvatar}
                         alt="Аватар"
                         className="avatar-preview"
+                        onError={(e) => {
+                            e.target.src = defaultAvatar;
+                        }}
                     />
                     <input
                         type="file"

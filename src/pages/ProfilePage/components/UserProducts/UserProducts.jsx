@@ -80,7 +80,7 @@ function UserProducts({ products, setProducts }) {
                         >
                             <img
                                 className="catalog__image"
-                                src={product.image}
+                                src={product.image || defaultProduct}
                                 alt={product.title}
                                 onError={(e) => {
                                     e.target.src = defaultProduct;

@@ -6,7 +6,13 @@ function Profile({ setIsOpen }) {
     return (
         <div className="profile__wrapper">
             <div className="profile__avatar">
-                <img src={user.avatar || defaultAvatar} alt="avatar" />
+                <img
+                    src={user.avatar || defaultAvatar}
+                    alt="avatar"
+                    onError={(e) => {
+                        e.target.src = defaultAvatar;
+                    }}
+                />
             </div>
             <span className="profile__devider" />
             <div className="profile__cred">
