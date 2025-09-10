@@ -6,17 +6,19 @@ import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import Pagination from '@/components/Pagination/Pagination';
 import EditProductModal from '../EditProductModal/EditProductModal';
 import { useToast } from '@/hooks/useToast';
+import { useAuth } from '@/hooks/useAuth';
 
 import { motion as Motion } from 'framer-motion';
 import './UserProducts.scss';
 import defaultProduct from '@/assets/default-product.png';
 
-function UserProducts({ user, products, setProducts }) {
+function UserProducts({ products, setProducts }) {
     const [editingProduct, setEditingProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const { addToast } = useToast();
+    const { user } = useAuth();
 
     useEffect(() => {
         if (!user?._id) return;

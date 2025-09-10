@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getCart, removeFromCart } from '@/api/carts';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { createPayment } from '@/api/payments';
 
 import Header from '@/components/Header/Header';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
@@ -10,9 +12,11 @@ import './CartPage.scss';
 
 function CartPage() {
     const { user, loading } = useAuth();
+    const { addToast } = useToast();
     const [authOpen, setAuthOpen] = useState(false);
     const [cart, setCart] = useState([]);
     const [cartLoading, setCartLoading] = useState(false);
+    const [payLoading, setPayLoading] = useState(false);
 
     const openAuth = () => setAuthOpen(true);
     const closeAuth = () => setAuthOpen(false);
@@ -30,6 +34,7 @@ function CartPage() {
             setCart(data);
         } catch (err) {
             console.error('Ошибка загрузки корзины:', err);
+            addToast('Ошибка загрузки корзины', 'error');
         } finally {
             setCartLoading(false);
         }
@@ -41,6 +46,39 @@ function CartPage() {
             setCart(updatedCart);
         } catch (err) {
             console.error('Ошибка удаления:', err);
+            addToast('Ошибка удаления', 'error');
+        }
+    };
+
+    const handlePay = async () => {
+        if (!user?._id) {
+            addToast('Войдите, чтобы оплатить', 'error');
+            return;
+        }
+
+        if (cart.length === 0) {
+            addToast('Корзина пуста', 'error');
+            return;
+        }
+
+        try {
+            setPayLoading(true);
+
+            // Создаём платёж на бэке, бэк уже формирует return_url с orderId
+            const { confirmationUrl } = await createPayment(user._id);
+
+            if (!confirmationUrl) {
+                addToast('Не удалось создать платёж', 'error');
+                return;
+            }
+
+            // Перенаправляем пользователя на YooKassa
+            window.location.href = confirmationUrl;
+        } catch (err) {
+            console.error('Ошибка оплаты:', err);
+            addToast('Ошибка при создании платежа', 'error');
+        } finally {
+            setPayLoading(false);
         }
     };
 
@@ -124,8 +162,12 @@ function CartPage() {
 
                             <div className="cart-summary">
                                 <h3>Итого: {total} ₽</h3>
-                                <button className="cart-checkout">
-                                    Оплатить
+                                <button
+                                    className="cart-checkout"
+                                    onClick={handlePay}
+                                    disabled={payLoading}
+                                >
+                                    {payLoading ? 'Обработка...' : 'Оплатить'}
                                 </button>
                             </div>
                         </>

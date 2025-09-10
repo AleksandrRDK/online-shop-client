@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/useToast';
+import { useAuth } from '@/hooks/useAuth';
 import { createProduct } from '@/api/products.js';
 import { validateAvatar } from '@/utils/validators';
 import Pica from 'pica';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 function ProductModal({
     productData,
     setProductData,
     setIsProductOpen,
-    user,
     setProducts,
 }) {
+    const [isLoading, setIsLoading] = useState(false);
     const { addToast } = useToast();
+    const { user } = useAuth();
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
 
@@ -61,6 +64,7 @@ function ProductModal({
 
     const handleProductSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         // Валидация
         if (!productData.title.trim()) {
@@ -123,6 +127,8 @@ function ProductModal({
         } catch (err) {
             addToast(`Ошибка при добавлении товара!`, 'error');
             console.error(err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -233,8 +239,19 @@ function ProductModal({
                 </div>
 
                 <div className="modal__actions">
-                    <button type="submit" className="success">
-                        Добавить
+                    <button
+                        type="submit"
+                        className="success"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <LoadingSpinner
+                                size={40}
+                                color="var(--color-accent-primary)"
+                            />
+                        ) : (
+                            'Добавить'
+                        )}
                     </button>
                     <button
                         type="button"

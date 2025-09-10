@@ -51,7 +51,13 @@ export const createProduct = async (product, file) => {
         formData.append('description', product.description);
         formData.append('price', product.price);
         formData.append('ownerId', product.ownerId);
-        if (product.tags) formData.append('tags', JSON.stringify(product.tags));
+        if (product.tags) {
+            const tagsArray = product.tags
+                .split(',')
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0);
+            formData.append('tags', JSON.stringify(tagsArray));
+        }
         if (product.characteristics)
             formData.append(
                 'characteristics',

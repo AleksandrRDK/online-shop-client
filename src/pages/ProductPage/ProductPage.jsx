@@ -14,6 +14,7 @@ import ProductActions from './components/ProductActions';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import './ProductPage.scss';
 import '@/styles/quantity.scss';
+import '@/styles/back-btn.scss';
 
 const ProductPage = () => {
     const { id } = useParams();

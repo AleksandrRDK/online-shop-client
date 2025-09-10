@@ -1,6 +1,8 @@
 import defaultAvatar from '@/assets/default-avatar.png';
+import { useAuth } from '@/hooks/useAuth';
 
-function Profile({ user, setIsOpen }) {
+function Profile({ setIsOpen }) {
+    const { user } = useAuth();
     return (
         <div className="profile__wrapper">
             <div className="profile__avatar">

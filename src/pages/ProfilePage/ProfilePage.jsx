@@ -6,6 +6,7 @@ import AuthModal from '@/components/AuthModal/AuthModal';
 import Profile from './components/Profile';
 import ProfileModal from './components/ProfileModal';
 import ProductModal from './components/ProductModal';
+import OrdersModal from './components/OrdersModal/OrdersModal';
 import UserProducts from './components/UserProducts/UserProducts';
 import GlobalModal from '@/components/GlobalModal/GlobalModal';
 
@@ -15,6 +16,7 @@ import '@/styles/product-form.scss';
 function ProfilePage() {
     const { user, setUser } = useAuth();
     const [products, setProducts] = useState([]);
+    const [isOrdersOpen, setIsOrdersOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isProductOpen, setIsProductOpen] = useState(false);
     const [formData, setFormData] = useState({
@@ -50,7 +52,8 @@ function ProfilePage() {
             <section className="profile">
                 <div className="container">
                     <div className="profile__container">
-                        <Profile user={user} setIsOpen={setIsOpen} />
+                        <Profile setIsOpen={setIsOpen} />
+
                         <div
                             className="profile__add-product"
                             onClick={() => setIsProductOpen(true)}
@@ -58,10 +61,16 @@ function ProfilePage() {
                             <span className="profile__plus">+</span>
                             <p>Добавить товар</p>
                         </div>
+
+                        <div
+                            className="profile__orders"
+                            onClick={() => setIsOrdersOpen(true)}
+                        >
+                            <p>Показать заказы</p>
+                        </div>
                     </div>
                     <hr />
                     <UserProducts
-                        user={user}
                         products={products}
                         setProducts={setProducts}
                     />
@@ -106,8 +115,18 @@ function ProfilePage() {
                             productData={productData}
                             setProductData={setProductData}
                             setIsProductOpen={setIsProductOpen}
-                            user={user}
                             setProducts={setProducts}
+                        />
+                    </GlobalModal>
+                )}
+                {isOrdersOpen && (
+                    <GlobalModal
+                        isOpen={isOrdersOpen}
+                        onClose={() => setIsOrdersOpen(false)}
+                    >
+                        <OrdersModal
+                            userId={user._id}
+                            onClose={() => setIsOrdersOpen(false)}
                         />
                     </GlobalModal>
                 )}
