@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { register, login, getProfile } from '@/api/users.js';
+import { register, login } from '@/api/auth.js';
 import { useAuth } from '@/hooks/useAuth.js';
 import { useToast } from '@/hooks/useToast';
 import {
@@ -19,7 +19,7 @@ function AuthModal({ onClose = () => {}, isOpen }) {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { setUser } = useAuth();
+    const { setUser, setAccessToken } = useAuth();
     const { addToast } = useToast();
 
     // закрытие на Escape
@@ -53,18 +53,25 @@ function AuthModal({ onClose = () => {}, isOpen }) {
 
         try {
             setLoading(true);
+
             if (tab === 'register') {
-                await register(username, email, password);
-                setTab('login');
+                const data = await register(username, email, password);
+                setAccessToken(data.accessToken);
+                setUser(data.user);
+                addToast(
+                    'Регистрация прошла успешно! Вы вошли в систему.',
+                    'success'
+                );
+                onClose();
             } else {
-                await login(email, password);
-                const res = await getProfile();
-                setUser(res.data);
+                const res = await login(email, password);
+                setAccessToken(res.accessToken);
+                setUser(res.user);
                 onClose();
             }
         } catch (err) {
             console.error(err);
-            addToast(`${err.response?.data?.message || 'Ошибка'}`, 'error');
+            addToast(err.response?.data?.message || 'Ошибка', 'error');
         } finally {
             setLoading(false);
         }

@@ -13,10 +13,10 @@ function ProductModal({
     setProducts,
 }) {
     const [isLoading, setIsLoading] = useState(false);
-    const { addToast } = useToast();
-    const { user } = useAuth();
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
+    const { addToast } = useToast();
+    const { user } = useAuth();
 
     const handleProductChange = (e) => {
         setProductData({

@@ -11,17 +11,20 @@ import { useToast } from '@/hooks/useToast';
 import {
     updateProfile,
     deleteProfile,
-    logout,
     uploadAvatar,
     deleteAvatar,
 } from '@/api/users.js';
+import { logout as logoutAPI } from '@/api/auth.js';
+import { useAuth } from '@/hooks/useAuth.js';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import defaultAvatar from '@/assets/default-avatar.png';
 
-function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
+function ProfileModal({ formData, setFormData, setIsOpen }) {
+    const { user, setUser, accessToken } = useAuth();
     const [avatarPreview, setAvatarPreview] = useState(user.avatar || '');
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarLoading, setAvatarLoading] = useState(false);
+    const [logoutLoading, setLogoutLoading] = useState(false);
 
     const { addToast } = useToast();
     const navigate = useNavigate();
@@ -35,6 +38,7 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const usernameError = validateUsername(formData.username);
         const emailError = validateEmail(formData.email);
         const passwordError = formData.password
@@ -46,35 +50,45 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
         if (passwordError) return addToast(passwordError, 'error');
 
         try {
-            const updatedUser = await updateProfile(formData);
+            const updatedUser = await updateProfile(accessToken, formData);
             setUser(updatedUser);
             addToast('Данные обновлены!', 'success');
             setIsOpen(false);
         } catch (err) {
-            addToast(`Ошибка при обновлении данных ${err}`, 'error');
+            addToast(
+                `Ошибка при обновлении данных: ${
+                    err.response?.data?.message || err
+                }`,
+                'error'
+            );
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        setLogoutLoading(true);
         try {
-            logout();
-        } catch (error) {
+            await logoutAPI(user._id);
+            setUser(null);
+            addToast('Вы вышли из аккаунта', 'success');
+            navigate('/');
+        } catch (err) {
+            console.error(err);
             addToast('Ошибка при выходе', 'error');
-            console.error(error);
+        } finally {
+            setLogoutLoading(false);
         }
-        setUser(null);
-        addToast('Вы вышли из аккаунта', 'success');
-        navigate('/');
     };
 
     const handleDelete = async () => {
         if (!window.confirm('Ты точно хочешь удалить аккаунт? 😢')) return;
         try {
-            await deleteProfile();
+            await deleteProfile(accessToken);
+            setUser(null);
             addToast('Аккаунт был удалён', 'success');
             navigate('/');
         } catch (err) {
             console.error('Ошибка при удалении:', err);
+            addToast('Ошибка при удалении аккаунта', 'error');
         }
     };
 
@@ -98,7 +112,6 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
 
         await pica.resize(img, canvas);
 
-        // Создаём Blob и превращаем в File для FormData
         const blob = await pica.toBlob(canvas, file.type);
         const compressedFile = new File([blob], file.name, { type: file.type });
 
@@ -111,7 +124,7 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
 
         setAvatarLoading(true);
         try {
-            const updatedUser = await uploadAvatar(avatarFile);
+            const updatedUser = await uploadAvatar(accessToken, avatarFile);
             setUser(updatedUser);
             addToast('Аватар обновлён!', 'success');
             setAvatarFile(null);
@@ -126,7 +139,7 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
     const handleDeleteAvatar = async () => {
         setAvatarLoading(true);
         try {
-            await deleteAvatar();
+            await deleteAvatar(accessToken);
             setUser((prev) => ({ ...prev, avatar: null }));
             setAvatarPreview('');
             setAvatarFile(null);
@@ -148,9 +161,7 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
                         src={avatarPreview || defaultAvatar}
                         alt="Аватар"
                         className="avatar-preview"
-                        onError={(e) => {
-                            e.target.src = defaultAvatar;
-                        }}
+                        onError={(e) => (e.target.src = defaultAvatar)}
                     />
                     <input
                         type="file"
@@ -210,8 +221,18 @@ function ProfileModal({ formData, setFormData, setIsOpen, setUser, user }) {
                     Сохранить
                 </button>
             </form>
-            <button type="button" className="logout" onClick={handleLogout}>
-                Выйти
+
+            <button
+                type="button"
+                className="logout"
+                onClick={handleLogout}
+                disabled={logoutLoading}
+            >
+                {logoutLoading ? (
+                    <LoadingSpinner size={18} color="#fff" />
+                ) : (
+                    'Выйти'
+                )}
             </button>
             <button onClick={handleDelete} className="danger">
                 Удалить аккаунт

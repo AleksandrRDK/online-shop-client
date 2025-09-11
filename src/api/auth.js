@@ -1,0 +1,33 @@
+import axios from 'axios';
+import { API_URL } from '@/config/config';
+
+const AUTH_URL = `${API_URL}/auth`;
+
+const API = axios.create({
+    baseURL: AUTH_URL,
+    withCredentials: true,
+});
+
+// регистрация
+export const register = async (username, email, password) => {
+    const res = await API.post('/register', { username, email, password });
+    return res.data; // { accessToken, user }
+};
+
+// логин
+export const login = async (email, password) => {
+    const res = await API.post('/login', { email, password });
+    return res.data; // { accessToken, user }
+};
+
+// refresh токен (обновление access token)
+export const refreshAccessToken = async () => {
+    const res = await API.post('/refresh');
+    return res.data.accessToken;
+};
+
+// logout
+export const logout = async (userId) => {
+    const res = await API.post('/logout', { userId });
+    return res.data;
+};

@@ -3,18 +3,19 @@ import { useAuth } from '@/hooks/useAuth';
 
 import Header from '@/components/Header/Header';
 import AuthModal from '@/components/AuthModal/AuthModal';
+import GlobalModal from '@/components/GlobalModal/GlobalModal';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import Profile from './components/Profile';
 import ProfileModal from './components/ProfileModal';
 import ProductModal from './components/ProductModal';
 import OrdersModal from './components/OrdersModal/OrdersModal';
 import UserProducts from './components/UserProducts/UserProducts';
-import GlobalModal from '@/components/GlobalModal/GlobalModal';
 
 import './ProfilePage.scss';
 import '@/styles/product-form.scss';
 
 function ProfilePage() {
-    const { user, setUser } = useAuth();
+    const { user, loading } = useAuth();
     const [products, setProducts] = useState([]);
     const [isOrdersOpen, setIsOrdersOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,21 @@ function ProfilePage() {
 
     const authOpen = !user;
 
-    if (!user) {
+    if (loading) {
+        return (
+            <>
+                <Header />
+                <div
+                    className="container"
+                    style={{ textAlign: 'center', padding: '2rem' }}
+                >
+                    <LoadingSpinner size={40} color="#3aaed8" />
+                </div>
+            </>
+        );
+    }
+
+    if (!user && !loading) {
         return (
             <>
                 <Header />
@@ -91,8 +106,6 @@ function ProfilePage() {
                             formData={formData}
                             setFormData={setFormData}
                             setIsOpen={setIsOpen}
-                            setUser={setUser}
-                            user={user}
                         />
                     </GlobalModal>
                 )}
