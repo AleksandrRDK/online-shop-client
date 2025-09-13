@@ -56,9 +56,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
             setIsOpen(false);
         } catch (err) {
             addToast(
-                `Ошибка при обновлении данных: ${
-                    err.response?.data?.message || err
-                }`,
+                `Ошибка при обновлении данных: ${err.response?.data?.message}`,
                 'error'
             );
         }
@@ -74,6 +72,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
         } catch (err) {
             console.error(err);
             addToast('Ошибка при выходе', 'error');
+            addToast(err.response?.data?.message, 'error');
         } finally {
             setLogoutLoading(false);
         }
@@ -89,6 +88,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
         } catch (err) {
             console.error('Ошибка при удалении:', err);
             addToast('Ошибка при удалении аккаунта', 'error');
+            addToast(err.response?.data?.message, 'error');
         }
     };
 

@@ -1,10 +1,10 @@
 import axios from 'axios';
+import { API_URL, getAPI } from '@/http/index';
 
-import { API_URL } from '@/config/config';
-
-export const getUserOrders = async (userId) => {
+export const getUserOrders = async (accessToken) => {
     try {
-        const response = await axios.get(`${API_URL}/orders/user/${userId}`);
+        const API = getAPI(accessToken);
+        const response = await API.get(`/orders/user`);
         return response.data;
     } catch (err) {
         console.error(

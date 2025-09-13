@@ -50,7 +50,7 @@ function ProfilePage() {
         );
     }
 
-    if (!user && !loading) {
+    if (!user) {
         return (
             <>
                 <Header />
@@ -137,10 +137,7 @@ function ProfilePage() {
                         isOpen={isOrdersOpen}
                         onClose={() => setIsOrdersOpen(false)}
                     >
-                        <OrdersModal
-                            userId={user._id}
-                            onClose={() => setIsOrdersOpen(false)}
-                        />
+                        <OrdersModal onClose={() => setIsOrdersOpen(false)} />
                     </GlobalModal>
                 )}
             </section>

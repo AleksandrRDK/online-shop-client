@@ -1,11 +1,9 @@
-import axios from 'axios';
-import { API_URL } from '@/config/config';
+import { getAPI } from '@/http/index';
 
-export const createPayment = async (userId) => {
+export const createPayment = async (accessToken) => {
     try {
-        const response = await axios.post(`${API_URL}/payment/create`, {
-            userId,
-        });
+        const API = getAPI(accessToken);
+        const response = await API.post('/payment/create');
         return response.data;
     } catch (err) {
         console.error(

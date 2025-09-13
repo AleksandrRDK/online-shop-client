@@ -11,7 +11,7 @@ import defaultProduct from '@/assets/default-product.png';
 import './CartPage.scss';
 
 function CartPage() {
-    const { user, loading } = useAuth();
+    const { user, loading, accessToken } = useAuth();
     const { addToast } = useToast();
     const [authOpen, setAuthOpen] = useState(false);
     const [cart, setCart] = useState([]);
@@ -30,7 +30,7 @@ function CartPage() {
     const loadCart = async () => {
         try {
             setCartLoading(true);
-            const data = await getCart(user._id);
+            const data = await getCart(accessToken);
             setCart(data);
         } catch (err) {
             console.error('Ошибка загрузки корзины:', err);
@@ -42,7 +42,7 @@ function CartPage() {
 
     const handleRemove = async (productId) => {
         try {
-            const updatedCart = await removeFromCart(user._id, productId);
+            const updatedCart = await removeFromCart(productId, accessToken);
             setCart(updatedCart);
         } catch (err) {
             console.error('Ошибка удаления:', err);
@@ -65,7 +65,7 @@ function CartPage() {
             setPayLoading(true);
 
             // Создаём платёж на бэке, бэк уже формирует return_url с orderId
-            const { confirmationUrl } = await createPayment(user._id);
+            const { confirmationUrl } = await createPayment(accessToken);
 
             if (!confirmationUrl) {
                 addToast('Не удалось создать платёж', 'error');

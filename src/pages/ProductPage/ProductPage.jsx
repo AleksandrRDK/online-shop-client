@@ -19,7 +19,7 @@ import '@/styles/back-btn.scss';
 const ProductPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, accessToken } = useAuth();
     const { addToast } = useToast();
 
     const [product, setProduct] = useState(null);
@@ -58,7 +58,7 @@ const ProductPage = () => {
                 });
 
                 if (user?._id) {
-                    const cart = await getCart(user._id);
+                    const cart = await getCart(accessToken);
                     const initialCart = {};
                     cart.forEach((item) => {
                         initialCart[item.productId._id] = item.quantity;

@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserOrders } from '@/api/orders';
+import { useAuth } from '@/hooks/useAuth';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 import './OrdersModal.scss';
 
-function OrdersModal({ userId, onClose }) {
+function OrdersModal({ onClose }) {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { accessToken } = useAuth();
 
     useEffect(() => {
-        if (!userId) return;
+        if (!accessToken) return;
         const loadOrders = async () => {
             try {
                 setLoading(true);
-                const data = await getUserOrders(userId);
+                const data = await getUserOrders(accessToken);
                 setOrders(data);
             } catch (err) {
                 console.error('Ошибка загрузки заказов:', err);
@@ -24,7 +26,7 @@ function OrdersModal({ userId, onClose }) {
             }
         };
         loadOrders();
-    }, [userId]);
+    }, [accessToken]);
 
     if (loading) {
         return (

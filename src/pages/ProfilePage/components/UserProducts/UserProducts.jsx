@@ -18,7 +18,7 @@ function UserProducts({ products, setProducts }) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const { addToast } = useToast();
-    const { user } = useAuth();
+    const { user, accessToken } = useAuth();
 
     useEffect(() => {
         if (!user?._id) return;
@@ -30,7 +30,7 @@ function UserProducts({ products, setProducts }) {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const data = await getProductsByUser(user._id, page, 12);
+                const data = await getProductsByUser(page, 12, accessToken);
                 setProducts(data.products);
                 setTotalPages(data.totalPages);
             } catch (err) {

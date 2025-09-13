@@ -6,7 +6,7 @@ import { validateAvatar } from '@/utils/validators';
 import { useToast } from '@/hooks/useToast';
 import Pica from 'pica';
 
-function ProductHeader({ product, editing, previewImg, cart, user }) {
+function ProductHeader({ product, editing, previewImg, cart }) {
     const { id } = useParams();
     const { isEditing, editData, setEditData } = editing;
     const { preview: preview, setPreview } = previewImg;
@@ -125,7 +125,6 @@ function ProductHeader({ product, editing, previewImg, cart, user }) {
                         <p className="price">{product.price} ₽</p>
                         <QuantityControls
                             quantity={quantity}
-                            user={user}
                             cartItems={cartItems}
                             id={id}
                             setCartItems={setCartItems}

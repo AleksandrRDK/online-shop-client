@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { removeFromCart, addToCart } from '@/api/carts';
 import { useToast } from '@/hooks/useToast';
+import { useAuth } from '@/hooks/useAuth';
 
-function QuantityControls({ quantity, user, cartItems, id, setCartItems }) {
+function QuantityControls({ quantity, cartItems, id, setCartItems }) {
     const [updating, setUpdating] = useState(false);
     const { addToast } = useToast();
+    const { user, accessToken } = useAuth();
 
     const updateCart = async (change) => {
         if (!user?._id) {
@@ -18,9 +20,9 @@ function QuantityControls({ quantity, user, cartItems, id, setCartItems }) {
         try {
             setUpdating(true);
             if (newQuantity === 0) {
-                await removeFromCart(user._id, id);
+                await removeFromCart(id, accessToken);
             } else {
-                await addToCart(user._id, id, change);
+                await addToCart(id, change, accessToken);
             }
             setCartItems((prev) => {
                 const updated = { ...prev };

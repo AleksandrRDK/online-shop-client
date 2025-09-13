@@ -17,12 +17,12 @@ const CatalogPage = () => {
     const [loadingProducts, setLoadingProducts] = useState(true); // отдельный loading
     const [tagModalOpen, setTagModalOpen] = useState(false);
     const [selectedTags, setSelectedTags] = useState([]);
-    const { user } = useAuth();
     const [cartItems, setCartItems] = useState({});
     const [updating, setUpdating] = useState({});
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [filter, setFilter] = useState('all');
+    const { user, accessToken } = useAuth();
     const { addToast } = useToast();
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const CatalogPage = () => {
         const fetchCartData = async () => {
             if (!user?._id) return;
             try {
-                const cart = await getCart(user._id);
+                const cart = await getCart(accessToken);
                 const initialCart = {};
                 cart.forEach((item) => {
                     initialCart[item.productId._id] = item.quantity;

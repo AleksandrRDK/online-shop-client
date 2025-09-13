@@ -1,34 +1,23 @@
-import axios from 'axios';
-import { API_URL } from '@/config/config';
+import { getAPI } from '@/http/index';
 
-const USERS_URL = `${API_URL}/users`;
-
-// фабрика axios с Authorization
-export const getAPI = (accessToken) =>
-    axios.create({
-        baseURL: USERS_URL,
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
-    });
+const USERS_URL = '/users/profile';
 
 // --- ПРОФИЛЬ ---
 export const getProfile = async (accessToken) => {
     const API = getAPI(accessToken);
-    const res = await API.get('/profile');
+    const res = await API.get(USERS_URL);
     return res.data;
 };
 
 export const updateProfile = async (accessToken, userData) => {
     const API = getAPI(accessToken);
-    const res = await API.put('/profile', userData);
+    const res = await API.put(USERS_URL, userData);
     return res.data;
 };
 
 export const deleteProfile = async (accessToken) => {
     const API = getAPI(accessToken);
-    const res = await API.delete('/profile');
+    const res = await API.delete(USERS_URL);
     return res.data;
 };
 
@@ -38,7 +27,7 @@ export const uploadAvatar = async (accessToken, file) => {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    const res = await API.put('/profile/avatar', formData, {
+    const res = await API.put(`${USERS_URL}/avatar`, formData, {
         headers: {
             ...API.defaults.headers,
             'Content-Type': 'multipart/form-data',
@@ -49,6 +38,6 @@ export const uploadAvatar = async (accessToken, file) => {
 
 export const deleteAvatar = async (accessToken) => {
     const API = getAPI(accessToken);
-    const res = await API.delete('/profile/avatar');
+    const res = await API.delete(`${USERS_URL}/avatar`);
     return res.data;
 };

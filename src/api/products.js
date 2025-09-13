@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '@/config/config';
+import { API_URL, getAPI } from '@/http/index';
 const PRODUCTS_URL = `${API_URL}/products`;
 
 export const getProducts = async (
@@ -19,17 +19,15 @@ export const getProducts = async (
     }
 };
 
-export const getProductsByUser = async (userId, page = 1, limit = 48) => {
+export const getProductsByUser = async (page = 1, limit = 48, accessToken) => {
     try {
-        const { data } = await axios.get(`${PRODUCTS_URL}/user/${userId}`, {
+        const API = getAPI(accessToken);
+        const { data } = await API.get(`/products/user`, {
             params: { page, limit },
         });
         return data;
     } catch (err) {
-        console.error(
-            `Ошибка при получении товаров пользователя ${userId}:`,
-            err
-        );
+        console.error(`Ошибка при получении товаров пользователя:`, err);
         throw err;
     }
 };
@@ -44,13 +42,13 @@ export const getProductById = async (id) => {
     }
 };
 
-export const createProduct = async (product, file) => {
+export const createProduct = async (product, file, accessToken) => {
     try {
+        const API = getAPI(accessToken);
         const formData = new FormData();
         formData.append('title', product.title);
         formData.append('description', product.description);
         formData.append('price', product.price);
-        formData.append('ownerId', product.ownerId);
         if (product.tags) {
             const tagsArray = product.tags
                 .split(',')
@@ -65,7 +63,7 @@ export const createProduct = async (product, file) => {
             );
         if (file) formData.append('image', file);
 
-        const { data } = await axios.post(PRODUCTS_URL, formData, {
+        const { data } = await API.post('/products', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         return data;

@@ -16,7 +16,7 @@ function ProductModal({
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const { addToast } = useToast();
-    const { user } = useAuth();
+    const { accessToken } = useAuth();
 
     const handleProductChange = (e) => {
         setProductData({
@@ -105,7 +105,7 @@ function ProductModal({
                 {
                     ...productData,
                     characteristics: characteristicsObject,
-                    ownerId: user._id,
+                    accessToken,
                 },
                 file // сжатая картинка
             );

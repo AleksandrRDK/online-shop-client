@@ -1,12 +1,9 @@
-import axios from 'axios';
-import { API_URL } from '@/config/config';
+import { getAPI } from '@/http/index';
 
-const CARTS_URL = `${API_URL}/carts`;
-
-export const addToCart = async (userId, productId, quantity = 1) => {
+export const addToCart = async (productId, quantity = 1, accessToken) => {
     try {
-        const res = await axios.post(CARTS_URL, {
-            userId,
+        const API = getAPI(accessToken);
+        const res = await API.post('/carts', {
             productId,
             quantity,
         });
@@ -17,9 +14,10 @@ export const addToCart = async (userId, productId, quantity = 1) => {
     }
 };
 
-export const getCart = async (userId) => {
+export const getCart = async (accessToken) => {
     try {
-        const res = await axios.get(`${CARTS_URL}/${userId}`);
+        const API = getAPI(accessToken);
+        const res = await API.get('/carts');
         return res.data;
     } catch (err) {
         console.error('Ошибка при загрузке корзины:', err);
@@ -27,9 +25,10 @@ export const getCart = async (userId) => {
     }
 };
 
-export const removeFromCart = async (userId, productId) => {
+export const removeFromCart = async (productId, accessToken) => {
     try {
-        const res = await axios.delete(`${CARTS_URL}/${userId}/${productId}`);
+        const API = getAPI(accessToken);
+        const res = await API.delete(`/carts/${productId}`);
         return res.data;
     } catch (err) {
         console.error('Ошибка при удалении товара:', err);
