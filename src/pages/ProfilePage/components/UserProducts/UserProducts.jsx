@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getProductsByUser, deleteProduct } from '@/api/products';
+import { deleteProduct, getProductsByUser } from '@/api/products';
 import GlobalModal from '@/components/GlobalModal/GlobalModal';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import Pagination from '@/components/Pagination/Pagination';
@@ -18,19 +18,14 @@ function UserProducts({ products, setProducts }) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const { addToast } = useToast();
-    const { user, accessToken } = useAuth();
+    const { user, loading: authLoading } = useAuth();
 
     useEffect(() => {
-        if (!user?._id) return;
-        setPage(1);
-    }, [user?._id]);
-
-    useEffect(() => {
-        if (!user?._id) return;
+        if (!user?._id || authLoading) return;
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const data = await getProductsByUser(page, 12, accessToken);
+                const data = await getProductsByUser(page, 12);
                 setProducts(data.products);
                 setTotalPages(data.totalPages);
             } catch (err) {

@@ -8,25 +8,22 @@ import {
     validateAvatar,
 } from '@/utils/validators';
 import { useToast } from '@/hooks/useToast';
-import {
-    updateProfile,
-    deleteProfile,
-    uploadAvatar,
-    deleteAvatar,
-} from '@/api/users.js';
+import { useUsersApi } from '@/api/users.js';
 import { logout as logoutAPI } from '@/api/auth.js';
 import { useAuth } from '@/hooks/useAuth.js';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import defaultAvatar from '@/assets/default-avatar.png';
 
 function ProfileModal({ formData, setFormData, setIsOpen }) {
-    const { user, setUser, accessToken } = useAuth();
+    const { user, setUser, logoutForLS } = useAuth();
     const [avatarPreview, setAvatarPreview] = useState(user.avatar || '');
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarLoading, setAvatarLoading] = useState(false);
     const [logoutLoading, setLogoutLoading] = useState(false);
 
     const { addToast } = useToast();
+    const { updateProfile, deleteProfile, uploadAvatar, deleteAvatar } =
+        useUsersApi();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -50,7 +47,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
         if (passwordError) return addToast(passwordError, 'error');
 
         try {
-            const updatedUser = await updateProfile(accessToken, formData);
+            const updatedUser = await updateProfile(formData);
             setUser(updatedUser);
             addToast('Данные обновлены!', 'success');
             setIsOpen(false);
@@ -65,8 +62,8 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
     const handleLogout = async () => {
         setLogoutLoading(true);
         try {
-            await logoutAPI(user._id);
-            setUser(null);
+            await logoutAPI();
+            logoutForLS();
             addToast('Вы вышли из аккаунта', 'success');
             navigate('/');
         } catch (err) {
@@ -81,7 +78,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
     const handleDelete = async () => {
         if (!window.confirm('Ты точно хочешь удалить аккаунт? 😢')) return;
         try {
-            await deleteProfile(accessToken);
+            await deleteProfile();
             setUser(null);
             addToast('Аккаунт был удалён', 'success');
             navigate('/');
@@ -124,7 +121,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
 
         setAvatarLoading(true);
         try {
-            const updatedUser = await uploadAvatar(accessToken, avatarFile);
+            const updatedUser = await uploadAvatar(avatarFile);
             setUser(updatedUser);
             addToast('Аватар обновлён!', 'success');
             setAvatarFile(null);
@@ -139,7 +136,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
     const handleDeleteAvatar = async () => {
         setAvatarLoading(true);
         try {
-            await deleteAvatar(accessToken);
+            await deleteAvatar();
             setUser((prev) => ({ ...prev, avatar: null }));
             setAvatarPreview('');
             setAvatarFile(null);

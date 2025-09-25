@@ -22,7 +22,7 @@ const CatalogPage = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [filter, setFilter] = useState('all');
-    const { user, accessToken } = useAuth();
+    const { user } = useAuth();
     const { addToast } = useToast();
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const CatalogPage = () => {
         const fetchCartData = async () => {
             if (!user?._id) return;
             try {
-                const cart = await getCart(accessToken);
+                const cart = await getCart();
                 const initialCart = {};
                 cart.forEach((item) => {
                     initialCart[item.productId._id] = item.quantity;

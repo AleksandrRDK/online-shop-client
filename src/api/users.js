@@ -1,43 +1,83 @@
-import { getAPI } from '@/http/index';
+import api from '../http';
 
 const USERS_URL = '/users/profile';
 
-// --- ПРОФИЛЬ ---
-export const getProfile = async (accessToken) => {
-    const API = getAPI(accessToken);
-    const res = await API.get(USERS_URL);
-    return res.data;
-};
+export const useUsersApi = () => {
+    const getProfile = async () => {
+        try {
+            const { data } = await api.get(USERS_URL);
+            return data;
+        } catch (err) {
+            console.error(
+                '[useUsersApi] Ошибка при получении профиля:',
+                err.response?.data || err
+            );
+            throw err;
+        }
+    };
 
-export const updateProfile = async (accessToken, userData) => {
-    const API = getAPI(accessToken);
-    const res = await API.put(USERS_URL, userData);
-    return res.data;
-};
+    const updateProfile = async (userData) => {
+        try {
+            const { data } = await api.put(USERS_URL, userData);
+            return data;
+        } catch (err) {
+            console.error(
+                '[useUsersApi] Ошибка при обновлении профиля:',
+                err.response?.data || err
+            );
+            throw err;
+        }
+    };
 
-export const deleteProfile = async (accessToken) => {
-    const API = getAPI(accessToken);
-    const res = await API.delete(USERS_URL);
-    return res.data;
-};
+    const deleteProfile = async () => {
+        try {
+            const { data } = await api.delete(USERS_URL);
+            return data;
+        } catch (err) {
+            console.error(
+                '[useUsersApi] Ошибка при удалении профиля:',
+                err.response?.data || err
+            );
+            throw err;
+        }
+    };
 
-// --- АВАТАР ---
-export const uploadAvatar = async (accessToken, file) => {
-    const API = getAPI(accessToken);
-    const formData = new FormData();
-    formData.append('avatar', file);
+    const uploadAvatar = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append('avatar', file);
 
-    const res = await API.put(`${USERS_URL}/avatar`, formData, {
-        headers: {
-            ...API.defaults.headers,
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-    return res.data;
-};
+            const { data } = await api.put(`${USERS_URL}/avatar`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return data;
+        } catch (err) {
+            console.error(
+                '[useUsersApi] Ошибка при загрузке аватара:',
+                err.response?.data || err
+            );
+            throw err;
+        }
+    };
 
-export const deleteAvatar = async (accessToken) => {
-    const API = getAPI(accessToken);
-    const res = await API.delete(`${USERS_URL}/avatar`);
-    return res.data;
+    const deleteAvatar = async () => {
+        try {
+            const { data } = await api.delete(`${USERS_URL}/avatar`);
+            return data;
+        } catch (err) {
+            console.error(
+                '[useUsersApi] Ошибка при удалении аватара:',
+                err.response?.data || err
+            );
+            throw err;
+        }
+    };
+
+    return {
+        getProfile,
+        updateProfile,
+        deleteProfile,
+        uploadAvatar,
+        deleteAvatar,
+    };
 };

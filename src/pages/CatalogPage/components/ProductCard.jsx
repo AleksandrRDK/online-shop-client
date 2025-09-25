@@ -12,7 +12,7 @@ function ProductCard({
     setCartItems,
     setUpdating,
 }) {
-    const { user, accessToken } = useAuth();
+    const { user } = useAuth();
     const { addToast } = useToast();
 
     const quantity = cartItems[product._id] || 0;
@@ -31,9 +31,9 @@ function ProductCard({
             setUpdating((prev) => ({ ...prev, [productId]: true }));
 
             if (newQuantity === 0) {
-                await removeFromCart(productId, accessToken);
+                await removeFromCart(productId);
             } else {
-                await addToCart(productId, change, accessToken);
+                await addToCart(productId, change);
             }
 
             setCartItems((prev) => {

@@ -1,10 +1,8 @@
-import axios from 'axios';
-import { API_URL, getAPI } from '@/http/index';
+import api from '../http';
 
-export const getUserOrders = async (accessToken) => {
+export const getUserOrders = async () => {
     try {
-        const API = getAPI(accessToken);
-        const response = await API.get(`/orders/user`);
+        const response = await api.get('/orders/user');
         return response.data;
     } catch (err) {
         console.error(
@@ -17,8 +15,8 @@ export const getUserOrders = async (accessToken) => {
 
 export const getOrderById = async (orderId) => {
     try {
-        const res = await axios.get(`${API_URL}/orders/${orderId}`);
-        return res.data;
+        const response = await api.get(`/orders/${orderId}`);
+        return response.data;
     } catch (err) {
         console.error('Ошибка получения заказа:', err.response?.data || err);
         throw err;

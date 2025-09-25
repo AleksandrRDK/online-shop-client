@@ -1,37 +1,40 @@
-import { getAPI } from '@/http/index';
+import api from '../http';
 
-export const addToCart = async (productId, quantity = 1, accessToken) => {
+export const getCart = async () => {
     try {
-        const API = getAPI(accessToken);
-        const res = await API.post('/carts', {
-            productId,
-            quantity,
-        });
-        return res.data;
+        const response = await api.get('/carts');
+        return response.data;
     } catch (err) {
-        console.error('Ошибка при добавлении в корзину:', err);
+        console.error(
+            'Ошибка при получении корзины:',
+            err.response?.data || err
+        );
         throw err;
     }
 };
 
-export const getCart = async (accessToken) => {
+export const addToCart = async (productId, quantity = 1) => {
     try {
-        const API = getAPI(accessToken);
-        const res = await API.get('/carts');
-        return res.data;
+        const response = await api.post('/carts', { productId, quantity });
+        return response.data;
     } catch (err) {
-        console.error('Ошибка при загрузке корзины:', err);
+        console.error(
+            'Ошибка при добавлении товара в корзину:',
+            err.response?.data || err
+        );
         throw err;
     }
 };
 
-export const removeFromCart = async (productId, accessToken) => {
+export const removeFromCart = async (productId) => {
     try {
-        const API = getAPI(accessToken);
-        const res = await API.delete(`/carts/${productId}`);
-        return res.data;
+        const response = await api.delete(`/carts/${productId}`);
+        return response.data;
     } catch (err) {
-        console.error('Ошибка при удалении товара:', err);
+        console.error(
+            'Ошибка при удалении товара из корзины:',
+            err.response?.data || err
+        );
         throw err;
     }
 };

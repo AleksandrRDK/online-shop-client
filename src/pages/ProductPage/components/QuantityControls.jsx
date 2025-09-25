@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 function QuantityControls({ quantity, cartItems, id, setCartItems }) {
     const [updating, setUpdating] = useState(false);
     const { addToast } = useToast();
-    const { user, accessToken } = useAuth();
+    const { user } = useAuth();
 
     const updateCart = async (change) => {
         if (!user?._id) {
@@ -20,9 +20,9 @@ function QuantityControls({ quantity, cartItems, id, setCartItems }) {
         try {
             setUpdating(true);
             if (newQuantity === 0) {
-                await removeFromCart(id, accessToken);
+                await removeFromCart(id);
             } else {
-                await addToCart(id, change, accessToken);
+                await addToCart(id, change);
             }
             setCartItems((prev) => {
                 const updated = { ...prev };

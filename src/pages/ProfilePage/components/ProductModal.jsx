@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
 import { createProduct } from '@/api/products.js';
 import { validateAvatar } from '@/utils/validators';
 import Pica from 'pica';
@@ -16,7 +15,6 @@ function ProductModal({
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const { addToast } = useToast();
-    const { accessToken } = useAuth();
 
     const handleProductChange = (e) => {
         setProductData({
@@ -105,7 +103,6 @@ function ProductModal({
                 {
                     ...productData,
                     characteristics: characteristicsObject,
-                    accessToken,
                 },
                 file // сжатая картинка
             );

@@ -17,7 +17,7 @@ function OrdersModal({ onClose }) {
         const loadOrders = async () => {
             try {
                 setLoading(true);
-                const data = await getUserOrders(accessToken);
+                const data = await getUserOrders();
                 setOrders(data);
             } catch (err) {
                 console.error('Ошибка загрузки заказов:', err);

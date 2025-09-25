@@ -19,11 +19,11 @@ import '@/styles/back-btn.scss';
 const ProductPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user, accessToken } = useAuth();
+    const { user } = useAuth();
     const { addToast } = useToast();
 
     const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loadingPr, setLoadingPr] = useState(true);
     const [error, setError] = useState(null);
 
     const [cartItems, setCartItems] = useState({});
@@ -44,7 +44,7 @@ const ProductPage = () => {
         if (!id) return;
         const fetchData = async () => {
             try {
-                setLoading(true);
+                setLoadingPr(true);
                 const product = await getProductById(id);
                 setProduct(product);
                 setEditData({
@@ -58,7 +58,7 @@ const ProductPage = () => {
                 });
 
                 if (user?._id) {
-                    const cart = await getCart(accessToken);
+                    const cart = await getCart();
                     const initialCart = {};
                     cart.forEach((item) => {
                         initialCart[item.productId._id] = item.quantity;
@@ -69,13 +69,13 @@ const ProductPage = () => {
                 setError(`Ошибка при загрузке товара: ${error.message}`);
                 addToast('Ошибка при загрузке товара', 'error');
             } finally {
-                setLoading(false);
+                setLoadingPr(false);
             }
         };
         fetchData();
     }, [id]);
 
-    if (loading) return <LoadingSpinner size={160} color="#3aaed8" />;
+    if (loadingPr) return <LoadingSpinner size={160} color="#3aaed8" />;
     if (error) return <p className="status error">{error}</p>;
     if (!product) return <p className="status">Товар не найден</p>;
 
@@ -131,7 +131,7 @@ const ProductPage = () => {
                             setPreview={setPreview}
                             product={product}
                             setProduct={setProduct}
-                            setLoading={setLoading}
+                            setLoading={setLoadingPr}
                         />
                     )}
                 </div>

@@ -1,13 +1,12 @@
-import { getAPI } from '@/http/index';
+import api from '../http';
 
-export const createPayment = async (accessToken) => {
+export const createPayment = async () => {
     try {
-        const API = getAPI(accessToken);
-        const response = await API.post('/payment/create');
+        const response = await api.post('/payment/create');
         return response.data;
     } catch (err) {
         console.error(
-            'Ошибка при создании платежа:',
+            '[usePaymentApi] Ошибка при создании платежа:',
             err.response?.data || err
         );
         throw err;

@@ -1,93 +1,68 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
-import { getProfile } from '@/api/users.js';
-import { refreshAccessToken as refreshTokenAPI } from '@/api/auth.js';
-import { useToast } from '@/hooks/useToast';
+import { createContext, useState, useEffect } from 'react';
+import api from '../http';
+import { useUsersApi } from '../api/users';
+import { refreshAccessToken } from '../api/auth';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const { getProfile } = useUsersApi();
+
     const [user, setUser] = useState(null);
-    const [accessToken, setAccessToken] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { addToast } = useToast();
+    const [accessToken, setAccessToken] = useState(
+        localStorage.getItem('accessToken')
+    );
 
-    // Получение профиля пользователя через accessToken
-    const fetchProfile = useCallback(async (token) => {
-        try {
-            const profile = await getProfile(token);
-            setUser(profile);
-        } catch (err) {
-            addToast(`не удалось загрузить профиль - ${err?.message}`, 'error');
-            setUser(null);
-        }
-    }, []);
+    const loginForLS = (token, userData) => {
+        localStorage.setItem('accessToken', token);
+        setAccessToken(token);
+        setUser(userData);
+    };
 
-    // Функция обновления accessToken через refresh
-    const handleRefreshToken = useCallback(async () => {
-        try {
-            if (!user?._id) return null;
-            const newAccessToken = await refreshTokenAPI(user._id);
-            setAccessToken(newAccessToken);
-            return newAccessToken;
-        } catch (err) {
-            console.error('Не удалось обновить токен', err);
-            setUser(null);
-            setAccessToken(null);
-            return null;
-        }
-    }, [user]);
+    const logoutForLS = () => {
+        localStorage.removeItem('accessToken');
+        setAccessToken(null);
+        setUser(null);
+    };
 
+    // подставляем токен в хедеры при изменении
     useEffect(() => {
-        let cancelled = false;
+        if (accessToken) {
+            api.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
+        } else {
+            delete api.defaults.headers.common['Authorization'];
+        }
+    }, [accessToken]);
+
+    // авто-загрузка профиля при старте
+    useEffect(() => {
         const initAuth = async () => {
             try {
-                setLoading(true);
-                const token = await refreshTokenAPI();
-                if (token && !cancelled) {
-                    setAccessToken(token);
-                    await fetchProfile(token);
-                } else if (!token && !cancelled) {
-                    setUser(null);
+                if (accessToken) {
+                    const profile = await getProfile();
+                    setUser(profile);
+                } else {
+                    // пробуем обновить токен через refresh
+                    const newToken = await refreshAccessToken();
+                    localStorage.setItem('accessToken', newToken);
+                    setAccessToken(newToken);
+
+                    const profile = await getProfile();
+                    setUser(profile);
                 }
             } catch (err) {
-                console.error(err);
-                if (!cancelled) {
-                    setUser(null);
-                    setAccessToken(null);
-                }
+                console.error('[AuthProvider] авто-логин не удался:', err);
+                logoutForLS();
             } finally {
-                if (!cancelled) setLoading(false);
+                setLoading(false);
             }
         };
+
         initAuth();
-        return () => {
-            cancelled = true;
-        };
     }, []);
-    // второй useEffect сбрасывал setLoading из за этого добавил cancelled, теперь loading отображается верно и нет никаких багов!
-    useEffect(() => {
-        if (!accessToken) return; // <-- ранний выход: предотвращаем мерцание на mount
-        let cancelled = false;
-
-        const initAuthWithAccess = async () => {
-            try {
-                setLoading(true);
-                await fetchProfile(accessToken);
-            } catch (err) {
-                addToast(err.response?.data?.message, 'error');
-                console.error(err);
-                if (!cancelled) setUser(null);
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        };
-
-        initAuthWithAccess();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [accessToken, fetchProfile]);
 
     return (
         <AuthContext.Provider
@@ -96,8 +71,10 @@ export const AuthProvider = ({ children }) => {
                 setUser,
                 accessToken,
                 setAccessToken,
+                loginForLS,
+                logoutForLS,
                 loading,
-                refreshAccessToken: handleRefreshToken,
+                setLoading,
             }}
         >
             {children}

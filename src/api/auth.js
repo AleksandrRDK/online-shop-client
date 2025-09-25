@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { API_URL } from '@/http/index';
+import api from '../http';
+import { API_URL } from '@/http/config';
 
 const AUTH_URL = `${API_URL}/auth`;
 
@@ -27,7 +28,7 @@ export const refreshAccessToken = async () => {
 };
 
 // logout
-export const logout = async (userId) => {
-    const res = await API.post('/logout', { userId });
+export const logout = async () => {
+    const res = await api.post('/auth/logout');
     return res.data;
 };
