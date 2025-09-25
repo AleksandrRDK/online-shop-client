@@ -18,10 +18,10 @@ function UserProducts({ products, setProducts }) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const { addToast } = useToast();
-    const { user, loading: authLoading } = useAuth();
+    const { user, accessToken, loading: authLoading } = useAuth();
 
     useEffect(() => {
-        if (!user?._id || authLoading) return;
+        if (authLoading || !accessToken) return;
         const fetchProducts = async () => {
             setLoading(true);
             try {

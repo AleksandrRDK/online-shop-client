@@ -12,7 +12,7 @@ export const getProductsByUser = async (page = 1, limit = 48) => {
         return data;
     } catch (err) {
         console.error(
-            '[useProductsApi] Ошибка при получении товаров пользователя:',
+            'Ошибка при получении товаров пользователя:',
             err.response?.data || err
         );
         throw err;
@@ -47,10 +47,7 @@ export const createProduct = async (product, file) => {
 
         return data;
     } catch (err) {
-        console.error(
-            '[useProductsApi] Ошибка при создании товара:',
-            err.response?.data || err
-        );
+        console.error('Ошибка при создании товара:', err.response?.data || err);
         throw err;
     }
 };

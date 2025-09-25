@@ -19,7 +19,7 @@ function AuthModal({ onClose = () => {}, isOpen }) {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { setUser, setAccessToken } = useAuth();
+    const { loginForLS } = useAuth();
     const { addToast } = useToast();
 
     // закрытие на Escape
@@ -56,8 +56,7 @@ function AuthModal({ onClose = () => {}, isOpen }) {
 
             if (tab === 'register') {
                 const data = await register(username, email, password);
-                setAccessToken(data.accessToken);
-                setUser(data.user);
+                loginForLS(data.accessToken, data.user);
                 addToast(
                     'Регистрация прошла успешно! Вы вошли в систему.',
                     'success'
@@ -65,8 +64,7 @@ function AuthModal({ onClose = () => {}, isOpen }) {
                 onClose();
             } else {
                 const res = await login(email, password);
-                setAccessToken(res.accessToken);
-                setUser(res.user);
+                loginForLS(res.accessToken, res.user);
                 onClose();
             }
         } catch (err) {
