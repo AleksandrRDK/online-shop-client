@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { register, login } from '@/api/auth.js';
 import { useAuth } from '@/hooks/useAuth.js';
 import { useToast } from '@/hooks/useToast';
 import {
@@ -19,7 +18,7 @@ function AuthModal({ onClose = () => {}, isOpen }) {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { loginForLS } = useAuth();
+    const { registerUser, loginUser } = useAuth();
     const { addToast } = useToast();
 
     // закрытие на Escape
@@ -55,16 +54,14 @@ function AuthModal({ onClose = () => {}, isOpen }) {
             setLoading(true);
 
             if (tab === 'register') {
-                const data = await register(username, email, password);
-                loginForLS(data.accessToken, data.user);
+                await registerUser(username, email, password);
                 addToast(
                     'Регистрация прошла успешно! Вы вошли в систему.',
                     'success'
                 );
                 onClose();
             } else {
-                const res = await login(email, password);
-                loginForLS(res.accessToken, res.user);
+                await loginUser(email, password);
                 onClose();
             }
         } catch (err) {

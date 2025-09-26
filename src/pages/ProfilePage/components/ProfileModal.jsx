@@ -9,13 +9,12 @@ import {
 } from '@/utils/validators';
 import { useToast } from '@/hooks/useToast';
 import { useUsersApi } from '@/api/users.js';
-import { logout as logoutAPI } from '@/api/auth.js';
 import { useAuth } from '@/hooks/useAuth.js';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import defaultAvatar from '@/assets/default-avatar.png';
 
 function ProfileModal({ formData, setFormData, setIsOpen }) {
-    const { user, setUser, logoutForLS } = useAuth();
+    const { user, setUser, logoutUser } = useAuth();
     const [avatarPreview, setAvatarPreview] = useState(user.avatar || '');
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarLoading, setAvatarLoading] = useState(false);
@@ -62,9 +61,8 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
     const handleLogout = async () => {
         setLogoutLoading(true);
         try {
-            await logoutAPI();
-            logoutForLS();
-            addToast('Вы вышли из аккаунта', 'success');
+            const res = await logoutUser();
+            addToast(`${res.message}`, 'success');
             navigate('/');
         } catch (err) {
             console.error(err);

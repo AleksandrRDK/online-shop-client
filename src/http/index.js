@@ -22,7 +22,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessTokenShop');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -63,7 +63,7 @@ api.interceptors.response.use(
                     { withCredentials: true }
                 );
 
-                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('accessTokenShop', data.accessToken);
                 api.defaults.headers.common[
                     'Authorization'
                 ] = `Bearer ${data.accessToken}`;
@@ -73,7 +73,7 @@ api.interceptors.response.use(
             } catch (err) {
                 processQueue(err, null);
                 // тут можно вызвать logout()
-                localStorage.removeItem('accessToken');
+                localStorage.removeItem('accessTokenShop');
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserOrders } from '@/api/orders';
-import { useAuth } from '@/hooks/useAuth';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 import './OrdersModal.scss';
@@ -10,10 +9,8 @@ function OrdersModal({ onClose }) {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { accessToken } = useAuth();
 
     useEffect(() => {
-        if (!accessToken) return;
         const loadOrders = async () => {
             try {
                 setLoading(true);
@@ -26,7 +23,7 @@ function OrdersModal({ onClose }) {
             }
         };
         loadOrders();
-    }, [accessToken]);
+    }, []);
 
     if (loading) {
         return (

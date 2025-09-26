@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 import Header from '@/components/Header/Header';
@@ -33,6 +33,16 @@ function ProfilePage() {
         tags: '',
         characteristics: [],
     });
+
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                username: user.username || '',
+                email: user.email || '',
+                password: '',
+            });
+        }
+    }, [user]);
 
     const authOpen = !user;
 
