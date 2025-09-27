@@ -12,6 +12,13 @@
     align-items: center;
     justify-content: space-between;
 
+    &__image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: var(--radius);
+    }
+
     .product-info-circle {
         position: absolute;
         top: 8px;

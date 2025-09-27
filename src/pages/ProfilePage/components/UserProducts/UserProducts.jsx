@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import { deleteProduct, getProductsByUser } from '@/api/products';
+
 import GlobalModal from '@/components/GlobalModal/GlobalModal';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import Pagination from '@/components/Pagination/Pagination';
+import ProductCardLayout from '@/components/ProductCardLayout/ProductCardLayout';
 import EditProductModal from '../EditProductModal/EditProductModal';
+
 import { useToast } from '@/hooks/useToast';
 import { useAuth } from '@/hooks/useAuth';
 
-import { motion as Motion } from 'framer-motion';
 import './UserProducts.scss';
-import defaultProduct from '@/assets/default-product.png';
 
 function UserProducts({ products, setProducts }) {
     const [editingProduct, setEditingProduct] = useState(null);
@@ -66,21 +68,7 @@ function UserProducts({ products, setProducts }) {
             ) : (
                 <div className="user-products__list">
                     {products.map((product, i) => (
-                        <Motion.div
-                            key={product._id}
-                            className="product-card"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.2, duration: 0.6 }}
-                        >
-                            <img
-                                className="catalog__image"
-                                src={product.image || defaultProduct}
-                                alt={product.title}
-                                onError={(e) => {
-                                    e.target.src = defaultProduct;
-                                }}
-                            />
+                        <ProductCardLayout product={product} index={i}>
                             <h3>{product.title}</h3>
                             <p>Цена: {product.price}</p>
                             <div className="user-products__actions">
@@ -101,7 +89,7 @@ function UserProducts({ products, setProducts }) {
                             >
                                 !
                             </Link>
-                        </Motion.div>
+                        </ProductCardLayout>
                     ))}
                 </div>
             )}

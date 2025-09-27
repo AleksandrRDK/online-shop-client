@@ -1,9 +1,9 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import '@/styles/quantity.scss';
-import './ProductCardSkeleton.scss';
+import './CardSkeleton.scss';
 
-const ProductCardSkeleton = () => {
+const CardSkeleton = () => {
     return (
         <div className="product-card skeleton-card">
             <Skeleton height={180} borderRadius="var(--radius)" />{' '}
@@ -31,4 +31,4 @@ const ProductCardSkeleton = () => {
     );
 };
 
-export default ProductCardSkeleton;
+export default CardSkeleton;

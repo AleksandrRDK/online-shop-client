@@ -13,20 +13,13 @@ function ProductCardLayout({ product, index, children }) {
             transition={{ delay: index * 0.05, duration: 0.5 }}
         >
             <img
-                className="catalog__image"
+                className="product-card__image"
                 src={product.image || defaultProduct}
                 alt={product.title}
                 onError={(e) => {
                     e.target.src = defaultProduct;
                 }}
             />
-            <p className="catalog__price">
-                {new Intl.NumberFormat('ru-RU', {
-                    style: 'currency',
-                    currency: 'RUB',
-                }).format(product.price)}
-            </p>
-            <h2 className="catalog__name">{product.title}</h2>
 
             {children}
 

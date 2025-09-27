@@ -55,6 +55,13 @@ function ProductCard({
 
     return (
         <ProductCardLayout product={product} index={index}>
+            <p className="catalog__price">
+                {new Intl.NumberFormat('ru-RU', {
+                    style: 'currency',
+                    currency: 'RUB',
+                }).format(product.price)}
+            </p>
+            <h2 className="catalog__name">{product.title}</h2>
             <p className="catalog__description">{product.description}</p>
             <p className="catalog__owner">Продавец: {product.owner.username}</p>
             <div className="catalog__actions">

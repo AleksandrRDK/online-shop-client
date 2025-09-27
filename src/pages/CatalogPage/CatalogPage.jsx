@@ -9,7 +9,7 @@ import Header from '@/components/Header/Header';
 import FilterBar from './components/FilterBar';
 import TagFilterModal from './components/TagFilterModal';
 import ProductCard from './components/ProductCard';
-import ProductCardSkeleton from './components/skeleton/ProductCardSkeleton';
+import CardSkeleton from '@/components/CardSkeleton/CardSkeleton';
 import Pagination from '@/components/Pagination/Pagination';
 
 const CatalogPage = () => {
@@ -91,7 +91,7 @@ const CatalogPage = () => {
                     {loadingProducts ? (
                         <div className="catalog__grid">
                             {Array.from({ length: 12 }).map((_, i) => (
-                                <ProductCardSkeleton key={i} />
+                                <CardSkeleton key={i} />
                             ))}
                         </div>
                     ) : (
