@@ -73,7 +73,7 @@ const ProductPage = () => {
             }
         };
         fetchData();
-    }, [id]);
+    }, [id, user]);
 
     if (loadingPr) return <LoadingSpinner size={160} color="#3aaed8" />;
     if (error) return <p className="status error">{error}</p>;

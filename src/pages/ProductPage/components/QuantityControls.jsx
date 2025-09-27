@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { removeFromCart, addToCart } from '@/api/carts';
 import { useToast } from '@/hooks/useToast';
 import { useAuth } from '@/hooks/useAuth';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 function QuantityControls({ quantity, cartItems, id, setCartItems }) {
     const [updating, setUpdating] = useState(false);
     const { addToast } = useToast();
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
 
     const updateCart = async (change) => {
         if (!user?._id) {
@@ -46,7 +47,7 @@ function QuantityControls({ quantity, cartItems, id, setCartItems }) {
                     onClick={() => updateCart(1)}
                     disabled={updating}
                 >
-                    {updating ? '...' : 'Добавить в корзину'}
+                    {updating || loading ? '...' : 'Добавить в корзину'}
                 </button>
             ) : (
                 <div className="quantity-controls">
@@ -58,11 +59,7 @@ function QuantityControls({ quantity, cartItems, id, setCartItems }) {
                         -
                     </button>
                     <span className="quantity-number">
-                        {updating ? (
-                            <LoadingSpinner size={30} color="#3aaed8" />
-                        ) : (
-                            quantity
-                        )}
+                        {updating ? <LoadingSpinner size={30} /> : quantity}
                     </span>
                     <button
                         className="quantity-btn"

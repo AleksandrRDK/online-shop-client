@@ -9,12 +9,13 @@ import Header from '@/components/Header/Header';
 import FilterBar from './components/FilterBar';
 import TagFilterModal from './components/TagFilterModal';
 import ProductCard from './components/ProductCard';
+import ProductCardSkeleton from './components/skeleton/ProductCardSkeleton';
 import Pagination from '@/components/Pagination/Pagination';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 const CatalogPage = () => {
     const [products, setProducts] = useState([]);
-    const [loadingProducts, setLoadingProducts] = useState(true); // отдельный loading
+    const [loadingProducts, setLoadingProducts] = useState(true);
     const [tagModalOpen, setTagModalOpen] = useState(false);
     const [selectedTags, setSelectedTags] = useState([]);
     const [cartItems, setCartItems] = useState({});
@@ -89,10 +90,11 @@ const CatalogPage = () => {
                     />
 
                     {loadingProducts ? (
-                        <LoadingSpinner
-                            size={160}
-                            color="var(--color-accent-primary)"
-                        />
+                        <div className="catalog__grid">
+                            {Array.from({ length: 12 }).map((_, i) => (
+                                <ProductCardSkeleton key={i} />
+                            ))}
+                        </div>
                     ) : (
                         <>
                             <div className="catalog__grid">

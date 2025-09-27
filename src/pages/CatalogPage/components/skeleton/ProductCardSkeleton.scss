@@ -1,0 +1,8 @@
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: var(--radius);
+    background: var(--color-bg-secondary);
+    box-shadow: var(--shadow);
+}
