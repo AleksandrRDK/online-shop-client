@@ -1,1 +1,0 @@
-import{b as s}from"./index-Btt3JPxB.js";const o=async()=>{try{return(await s.get("/orders/user")).data}catch(r){throw console.error("Ошибка при получении заказов пользователя:",r.response?.data||r),r}},a=async r=>{try{return(await s.get(`/orders/${r}`)).data}catch(e){throw console.error("Ошибка получения заказа:",e.response?.data||e),e}};export{a,o as g};
