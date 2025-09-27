@@ -170,7 +170,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
                         disabled={avatarLoading || !avatarFile}
                     >
                         {avatarLoading ? (
-                            <LoadingSpinner size={18} color="#fff" />
+                            <LoadingSpinner size={18} />
                         ) : (
                             'Сохранить аватар'
                         )}
@@ -183,7 +183,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
                             disabled={avatarLoading}
                         >
                             {avatarLoading ? (
-                                <LoadingSpinner size={18} color="#fff" />
+                                <LoadingSpinner size={18} />
                             ) : (
                                 'Удалить аватар'
                             )}
@@ -223,11 +223,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
                 onClick={handleLogout}
                 disabled={logoutLoading}
             >
-                {logoutLoading ? (
-                    <LoadingSpinner size={18} color="#fff" />
-                ) : (
-                    'Выйти'
-                )}
+                {logoutLoading ? <LoadingSpinner size={18} /> : 'Выйти'}
             </button>
             <button onClick={handleDelete} className="danger">
                 Удалить аккаунт

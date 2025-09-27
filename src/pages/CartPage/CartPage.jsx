@@ -86,7 +86,7 @@ function CartPage() {
         return (
             <>
                 <Header />
-                <LoadingSpinner size={160} color="#3aaed8" />
+                <LoadingSpinner size={160} />
             </>
         );
     }

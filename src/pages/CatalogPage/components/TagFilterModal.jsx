@@ -55,10 +55,7 @@ function TagFilterModal({ isOpen, onClose, selectedTags, setSelectedTags }) {
 
                 {loadingTags ? (
                     <div className="tags-loading">
-                        <LoadingSpinner
-                            size={40}
-                            color="var(--color-accent-primary)"
-                        />
+                        <LoadingSpinner size={40} />
                     </div>
                 ) : (
                     <div className="tags-list">

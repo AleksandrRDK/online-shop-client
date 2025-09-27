@@ -79,7 +79,7 @@ function ProductCard({
                         </button>
                         <span className="quantity-number">
                             {isUpdating || loadingUser ? (
-                                <LoadingSpinner size={40} color="#3aaed8" />
+                                <LoadingSpinner size={40} />
                             ) : (
                                 quantity
                             )}

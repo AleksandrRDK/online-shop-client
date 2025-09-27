@@ -75,7 +75,7 @@ const ProductPage = () => {
         fetchData();
     }, [id, user]);
 
-    if (loadingPr) return <LoadingSpinner size={160} color="#3aaed8" />;
+    if (loadingPr) return <LoadingSpinner size={160} />;
     if (error) return <p className="status error">{error}</p>;
     if (!product) return <p className="status">Товар не найден</p>;
 

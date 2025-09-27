@@ -11,7 +11,6 @@ import TagFilterModal from './components/TagFilterModal';
 import ProductCard from './components/ProductCard';
 import ProductCardSkeleton from './components/skeleton/ProductCardSkeleton';
 import Pagination from '@/components/Pagination/Pagination';
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 const CatalogPage = () => {
     const [products, setProducts] = useState([]);

@@ -62,7 +62,7 @@ function UserProducts({ products, setProducts }) {
         <div className="user-products">
             <h2>ВАШИ ТОВАРЫ</h2>
             {loading ? (
-                <LoadingSpinner size={160} color="#3aaed8" />
+                <LoadingSpinner size={160} />
             ) : (
                 <div className="user-products__list">
                     {products.map((product, i) => (

@@ -28,7 +28,7 @@ function OrdersModal({ onClose }) {
     if (loading) {
         return (
             <div className="orders-modal">
-                <LoadingSpinner size={120} color="#3aaed8" />
+                <LoadingSpinner size={120} />
             </div>
         );
     }

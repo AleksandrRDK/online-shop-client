@@ -54,7 +54,7 @@ function ProfilePage() {
                     className="container"
                     style={{ textAlign: 'center', padding: '2rem' }}
                 >
-                    <LoadingSpinner size={40} color="#3aaed8" />
+                    <LoadingSpinner size={40} />
                 </div>
             </>
         );

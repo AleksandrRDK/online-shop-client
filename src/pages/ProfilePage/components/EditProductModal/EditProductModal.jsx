@@ -120,7 +120,7 @@ function EditProductModal({ product, onClose, onUpdate }) {
 
             {loading ? (
                 <div className="loading-container">
-                    <LoadingSpinner size={160} color="#3aaed8" />
+                    <LoadingSpinner size={160} />
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className="product-form">

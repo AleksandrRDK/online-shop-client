@@ -165,7 +165,7 @@ function AuthModal({ onClose = () => {}, isOpen }) {
                                 disabled={loading}
                             >
                                 {loading ? (
-                                    <LoadingSpinner size={20} color="#fff" />
+                                    <LoadingSpinner size={20} />
                                 ) : tab === 'login' ? (
                                     'Войти'
                                 ) : (

@@ -241,14 +241,7 @@ function ProductModal({
                         className="success"
                         disabled={isLoading}
                     >
-                        {isLoading ? (
-                            <LoadingSpinner
-                                size={40}
-                                color="var(--color-accent-primary)"
-                            />
-                        ) : (
-                            'Добавить'
-                        )}
+                        {isLoading ? <LoadingSpinner size={40} /> : 'Добавить'}
                     </button>
                     <button
                         type="button"
