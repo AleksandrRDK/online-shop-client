@@ -10,7 +10,7 @@ function QuantityControls({ quantity, cartItems, id, setCartItems }) {
     const { user, loading } = useAuth();
 
     const updateCart = async (change) => {
-        if (!user?._id) {
+        if (!user?.id) {
             addToast('Войдите, чтобы добавить товар в корзину', 'warning');
             return;
         }

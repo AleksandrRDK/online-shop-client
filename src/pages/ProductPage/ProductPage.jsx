@@ -57,7 +57,7 @@ const ProductPage = () => {
                     owner: product.owner?._id || product.owner,
                 });
 
-                if (user?._id) {
+                if (user?.id) {
                     const cart = await getCart();
                     const initialCart = {};
                     cart.forEach((item) => {
@@ -93,7 +93,7 @@ const ProductPage = () => {
     const isOwner =
         user &&
         product.owner &&
-        (product.owner._id === user._id || product.owner === user._id);
+        (product.owner._id === user.id || product.owner === user.id);
 
     return (
         <>

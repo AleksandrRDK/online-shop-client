@@ -22,7 +22,7 @@ function CartPage() {
     const closeAuth = () => setAuthOpen(false);
 
     useEffect(() => {
-        if (user?._id) {
+        if (user?.id) {
             loadCart();
         }
     }, [user]);
@@ -51,7 +51,7 @@ function CartPage() {
     };
 
     const handlePay = async () => {
-        if (!user?._id) {
+        if (!user?.id) {
             addToast('Войдите, чтобы оплатить', 'error');
             return;
         }

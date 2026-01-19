@@ -19,7 +19,7 @@ function ProductCard({
     const isUpdating = updating[product._id] || false;
 
     const updateCart = async (productId, change) => {
-        if (!user?._id) {
+        if (!user?.id) {
             addToast('Войдите, чтобы добавить товар в корзину', 'warning');
             return;
         }

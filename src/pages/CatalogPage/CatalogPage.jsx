@@ -44,7 +44,7 @@ const CatalogPage = () => {
 
     useEffect(() => {
         const fetchCartData = async () => {
-            if (!user?._id) return;
+            if (!user?.id) return;
             try {
                 const cart = await getCart();
                 const initialCart = {};

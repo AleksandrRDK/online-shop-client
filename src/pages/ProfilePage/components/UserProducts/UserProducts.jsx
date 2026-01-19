@@ -38,7 +38,7 @@ function UserProducts({ products, setProducts }) {
             }
         };
         fetchProducts();
-    }, [user?._id, page, setProducts]);
+    }, [user?.id, page, setProducts]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Удалить этот товар?')) return;

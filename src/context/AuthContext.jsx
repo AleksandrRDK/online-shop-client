@@ -10,23 +10,29 @@ export const AuthProvider = ({ children }) => {
     const { getProfile } = useUsersApi();
 
     const registerUser = async (username, email, password) => {
+        setLoading(true);
         const res = await register(username, email, password);
         localStorage.setItem('accessTokenShop', res.accessToken);
         setUser(res.user);
+        setLoading(false);
         return res;
     };
 
     const loginUser = async (email, password) => {
+        setLoading(true);
         const res = await login(email, password);
         localStorage.setItem('accessTokenShop', res.accessToken);
         setUser(res.user);
+        setLoading(false);
         return res;
     };
 
     const logoutUser = async () => {
+        setLoading(true);
         const res = await logout();
         localStorage.removeItem('accessTokenShop');
         setUser(null);
+        setLoading(false);
         return res;
     };
 

@@ -17,8 +17,6 @@ function CartSuccessPage() {
 
     useEffect(() => {
         if (!id) {
-            console.log(`id=${id}`);
-            console.log(`orderid=${orderId}`);
             navigate('/');
             return;
         }
