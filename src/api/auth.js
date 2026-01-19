@@ -29,6 +29,6 @@ export const refreshAccessToken = async () => {
 
 // logout
 export const logout = async () => {
-    const res = await api.post('/auth/logout');
+    const res = await api.post('/logout');
     return res.data;
 };
