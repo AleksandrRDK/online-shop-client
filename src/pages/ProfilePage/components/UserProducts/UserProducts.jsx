@@ -67,34 +67,48 @@ function UserProducts({ products, setProducts }) {
                 <LoadingSpinner size={160} />
             ) : (
                 <div className="user-products__list">
-                    {products.map((product, i) => (
-                        <ProductCardLayout product={product} index={i}>
-                            <h3>{product.title}</h3>
-                            <p>Цена: {product.price}</p>
-                            <div className="user-products__actions">
-                                <button
-                                    onClick={() => setEditingProduct(product)}
+                    {products.length > 0 ? (
+                        products.map((product, i) => (
+                            <ProductCardLayout product={product} index={i}>
+                                <h3>{product.title}</h3>
+                                <p>Цена: {product.price}</p>
+                                <div className="user-products__actions">
+                                    <button
+                                        onClick={() =>
+                                            setEditingProduct(product)
+                                        }
+                                    >
+                                        Изменить
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleDelete(product._id)
+                                        }
+                                    >
+                                        Удалить
+                                    </button>
+                                </div>
+                                <Link
+                                    to={`/product/${product._id}`}
+                                    className="product-info-circle"
                                 >
-                                    Изменить
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(product._id)}
-                                >
-                                    Удалить
-                                </button>
-                            </div>
-                            <Link
-                                to={`/product/${product._id}`}
-                                className="product-info-circle"
-                            >
-                                !
-                            </Link>
-                        </ProductCardLayout>
-                    ))}
+                                    !
+                                </Link>
+                            </ProductCardLayout>
+                        ))
+                    ) : (
+                        <p>У вас пока нет товаров</p>
+                    )}
                 </div>
             )}
 
-            <Pagination page={page} setPage={setPage} totalPages={totalPages} />
+            {products.length > 0 ? (
+                <Pagination
+                    page={page}
+                    setPage={setPage}
+                    totalPages={totalPages}
+                />
+            ) : null}
 
             {editingProduct && (
                 <GlobalModal

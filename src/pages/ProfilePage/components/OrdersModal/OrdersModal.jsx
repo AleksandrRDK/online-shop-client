@@ -17,7 +17,10 @@ function OrdersModal({ onClose }) {
                 const data = await getUserOrders();
                 setOrders(data);
             } catch (err) {
-                console.error('Ошибка загрузки заказов:', err);
+                console.error(
+                    'Ошибка загрузки заказов:',
+                    err.response?.data || err
+                );
             } finally {
                 setLoading(false);
             }
