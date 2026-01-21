@@ -1,1 +1,0 @@
-import{r as s,i as o,T as e}from"./index-fhKcy7_B.js";const r=()=>s.useContext(o),a=()=>{const t=s.useContext(e);if(!t)throw new Error("useToast must be used within ToastProvider");return t},u="/online-shop-client/assets/default-product-Cjlz7XAn.png";export{a,u as d,r as u};
