@@ -6,39 +6,34 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [initLoading, setInitLoading] = useState(true);
     const { getProfile } = useUsersApi();
 
     const registerUser = async (username, email, password) => {
-        setLoading(true);
         const res = await register(username, email, password);
         localStorage.setItem('accessTokenShop', res.accessToken);
         setUser(res.user);
-        setLoading(false);
         return res;
     };
 
     const loginUser = async (email, password) => {
-        setLoading(true);
         const res = await login(email, password);
         localStorage.setItem('accessTokenShop', res.accessToken);
         setUser(res.user);
-        setLoading(false);
         return res;
     };
 
     const logoutUser = async () => {
-        setLoading(true);
         const res = await logout();
         localStorage.removeItem('accessTokenShop');
         setUser(null);
-        setLoading(false);
         return res;
     };
 
     // авто-загрузка профиля при старте
     useEffect(() => {
         const initAuth = async () => {
+            setInitLoading(true);
             try {
                 if (localStorage.getItem('accessTokenShop')) {
                     const profile = await getProfile();
@@ -52,11 +47,11 @@ export const AuthProvider = ({ children }) => {
                     setUser(profile);
                 }
             } catch (err) {
-                console.error('[AuthProvider] авто-логин не удался:', err);
+                console.error('[AuthProvider] Автологин не удался:', err);
                 localStorage.removeItem('accessTokenShop');
                 setUser(null);
             } finally {
-                setLoading(false);
+                setInitLoading(false);
             }
         };
 
@@ -68,8 +63,7 @@ export const AuthProvider = ({ children }) => {
             value={{
                 user,
                 setUser,
-                loading,
-                setLoading,
+                initLoading,
                 registerUser,
                 loginUser,
                 logoutUser,

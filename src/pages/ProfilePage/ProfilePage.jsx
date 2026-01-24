@@ -15,7 +15,7 @@ import './ProfilePage.scss';
 import '@/styles/product-form.scss';
 
 function ProfilePage() {
-    const { user, loading } = useAuth();
+    const { user, initLoading } = useAuth();
     const [products, setProducts] = useState([]);
     const [isOrdersOpen, setIsOrdersOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +46,7 @@ function ProfilePage() {
 
     const authOpen = !user;
 
-    if (loading) {
+    if (initLoading) {
         return (
             <>
                 <Header />

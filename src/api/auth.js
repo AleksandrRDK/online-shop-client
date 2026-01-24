@@ -11,8 +11,15 @@ const API = axios.create({
 
 // регистрация
 export const register = async (username, email, password) => {
-    const res = await API.post('/register', { username, email, password });
-    return res.data; // { accessToken, user }
+    try {
+        const res = await API.post('/register', { username, email, password });
+        return res.data; // { accessToken, user }
+    } catch (err) {
+        if (axios.isAxiosError(err)) {
+            throw err.response?.data;
+        }
+        throw err;
+    }
 };
 
 // логин

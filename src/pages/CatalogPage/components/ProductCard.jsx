@@ -12,7 +12,7 @@ function ProductCard({
     setCartItems,
     setUpdating,
 }) {
-    const { user, loading: loadingUser } = useAuth();
+    const { user, initLoading } = useAuth();
     const { addToast } = useToast();
 
     const quantity = cartItems[product._id] || 0;
@@ -71,7 +71,7 @@ function ProductCard({
                         onClick={() => updateCart(product._id, 1)}
                         disabled={isUpdating}
                     >
-                        {isUpdating || loadingUser
+                        {isUpdating || initLoading
                             ? '...'
                             : 'Добавить в корзину'}
                     </button>
@@ -85,7 +85,7 @@ function ProductCard({
                             -
                         </button>
                         <span className="quantity-number">
-                            {isUpdating || loadingUser ? (
+                            {isUpdating || initLoading ? (
                                 <LoadingSpinner size={40} />
                             ) : (
                                 quantity

@@ -20,10 +20,10 @@ function UserProducts({ products, setProducts }) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const { addToast } = useToast();
-    const { user, loading: authLoading } = useAuth();
+    const { user, initLoading } = useAuth();
 
     useEffect(() => {
-        if (authLoading) return;
+        if (initLoading) return;
         const fetchProducts = async () => {
             setLoading(true);
             try {
@@ -69,7 +69,11 @@ function UserProducts({ products, setProducts }) {
                 <div className="user-products__list">
                     {products.length > 0 ? (
                         products.map((product, i) => (
-                            <ProductCardLayout product={product} index={i}>
+                            <ProductCardLayout
+                                product={product}
+                                index={i}
+                                key={product._id}
+                            >
                                 <h3>{product.title}</h3>
                                 <p>Цена: {product.price}</p>
                                 <div className="user-products__actions">

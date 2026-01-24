@@ -62,11 +62,18 @@ function AuthModal({ onClose = () => {}, isOpen }) {
                 onClose();
             } else {
                 await loginUser(email, password);
+                addToast('Вы вошли в систему!', 'success');
                 onClose();
             }
         } catch (err) {
             console.error(err);
-            addToast(err.response?.data?.message || 'Ошибка', 'error');
+
+            const message =
+                err?.message ||
+                err?.response?.data?.message ||
+                'Произошла ошибка';
+
+            addToast(message, 'error');
         } finally {
             setLoading(false);
         }

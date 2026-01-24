@@ -7,7 +7,7 @@ import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 function QuantityControls({ quantity, cartItems, id, setCartItems }) {
     const [updating, setUpdating] = useState(false);
     const { addToast } = useToast();
-    const { user, loading } = useAuth();
+    const { user, initLoading } = useAuth();
 
     const updateCart = async (change) => {
         if (!user?.id) {
@@ -47,7 +47,7 @@ function QuantityControls({ quantity, cartItems, id, setCartItems }) {
                     onClick={() => updateCart(1)}
                     disabled={updating}
                 >
-                    {updating || loading ? '...' : 'Добавить в корзину'}
+                    {updating || initLoading ? '...' : 'Добавить в корзину'}
                 </button>
             ) : (
                 <div className="quantity-controls">
