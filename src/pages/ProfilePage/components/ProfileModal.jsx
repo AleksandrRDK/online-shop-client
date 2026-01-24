@@ -77,6 +77,7 @@ function ProfileModal({ formData, setFormData, setIsOpen }) {
         if (!window.confirm('Ты точно хочешь удалить аккаунт? 😢')) return;
         try {
             await deleteProfile();
+            localStorage.removeItem('accessTokenShop');
             setUser(null);
             addToast('Аккаунт был удалён', 'success');
             navigate('/');
